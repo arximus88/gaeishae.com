@@ -8,11 +8,24 @@ class HolographicCard {
         this.initializeElements();
         this.initializeLocalization();
         this.initializeAudio();
+        this.initializeGlowPointer();
         this.bindEvents();
     }
 
     initializeLocalization() {
         this.localization = new window.Localization();
+    }
+
+    initializeGlowPointer() {
+        const updatePointer = (e) => {
+            document.documentElement.style.setProperty('--x', e.clientX.toFixed(2));
+            document.documentElement.style.setProperty('--y', e.clientY.toFixed(2));
+            document.documentElement.style.setProperty('--xp', (e.clientX / window.innerWidth).toFixed(2));
+            document.documentElement.style.setProperty('--yp', (e.clientY / window.innerHeight).toFixed(2));
+        };
+
+        document.body.addEventListener('pointermove', updatePointer);
+        document.body.addEventListener('mousemove', updatePointer);
     }
 
     initializeElements() {
@@ -106,8 +119,9 @@ class HolographicCard {
         const rotateX = -(mouseY / rect.height) * 10; // Max 10 degrees
         const rotateY = (mouseX / rect.width) * 10;   // Max 10 degrees
         
-        // Calculate border glow angle based on cursor position
-        const angle = Math.atan2(mouseY, mouseX) * (180 / Math.PI);
+        // Calculate mouse position relative to card
+        const mouseXPercent = ((e.clientX - rect.left) / rect.width) * 100;
+        const mouseYPercent = ((e.clientY - rect.top) / rect.height) * 100;
         
         const cardFront = this.card.querySelector('.card-front');
         
@@ -115,11 +129,9 @@ class HolographicCard {
         this.card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         this.card.style.transition = 'transform 0.1s ease-out';
         
-        // Update border glow angle
-        cardFront.style.setProperty('--glow-angle', `${angle}deg`);
-        
-        // Show border effect
-        cardFront.style.setProperty('--glow-opacity', '1');
+        // Update mouse position for border glow
+        cardFront.style.setProperty('--mouse-x', `${mouseXPercent}%`);
+        cardFront.style.setProperty('--mouse-y', `${mouseYPercent}%`);
     }
 
     resetCardTransform() {
@@ -127,12 +139,6 @@ class HolographicCard {
         
         this.card.style.transform = '';
         this.card.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        
-        // Reset border glow
-        const cardFront = this.card.querySelector('.card-front');
-        if (cardFront) {
-            cardFront.style.setProperty('--glow-opacity', '0');
-        }
     }
 
     flipCard() {

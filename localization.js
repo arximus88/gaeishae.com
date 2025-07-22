@@ -87,8 +87,8 @@ class Localization {
             this.switchLanguage();
         });
 
-        // Add to container
-        document.querySelector('.container').appendChild(langToggle);
+        // Add to body
+        document.body.appendChild(langToggle);
 
         // Add styles
         this.addLanguageToggleStyles();
