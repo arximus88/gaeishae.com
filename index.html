@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GÆISHÆ - Holographic Business Card</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card" id="businessCard">
+            <!-- Front of card -->
+            <div class="card-face card-front">
+                <div class="holographic-logo">
+                    <video class="logo-video" autoplay loop muted playsinline>
+                        <source src="logo.mp4" type="video/mp4">
+                        <h1 class="logo-text fallback">GÆISHÆ</h1>
+                    </video>
+                </div>
+            </div>
+            
+            <!-- Back of card -->
+            <div class="card-face card-back">
+                <div class="card-content">
+                    <h2 data-i18n="whoIs">Хто така GÆISHÆ?</h2>
+                    <p data-i18n="tagline">Артистка • Виконавиця • Творець</p>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="bookShowBtn">
+                            <span>📅</span>
+                            <span data-i18n="bookShow">Забронювати шоу</span>
+                        </button>
+                        
+                        <button class="btn btn-secondary" id="listenBtn">
+                            <span>🎵</span>
+                            <span data-i18n="listenSong">Прослухати пісню</span>
+                        </button>
+                        
+                        <button class="btn btn-tertiary" id="socialBtn">
+                            <span>🔗</span>
+                            <span data-i18n="socialLinks">Соцмережі</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Booking Form Modal -->
+        <div class="modal" id="bookingModal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h3 data-i18n="bookingTitle">Забронювати шоу</h3>
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label for="name" data-i18n="nameLabel">Ваше ім'я:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact" data-i18n="contactLabel">Контакт (телефон/email):</label>
+                        <input type="text" id="contact" name="contact" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="event" data-i18n="eventLabel">Для кого шоу:</label>
+                        <input type="text" id="event" name="event" data-i18n="eventPlaceholder" placeholder="Опишіть подію">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location" data-i18n="locationLabel">Де:</label>
+                        <input type="text" id="location" name="location" data-i18n="locationPlaceholder" placeholder="Місце проведення">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expectations" data-i18n="expectationsLabel">Що очікуєте:</label>
+                        <textarea id="expectations" name="expectations" rows="3" data-i18n="expectationsPlaceholder" placeholder="Опишіть ваші очікування"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" data-i18n="submitBtn">Надіслати заявку</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Sound toggle -->
+        <button class="sound-toggle" id="soundToggle" data-i18n-title="soundToggleTitle" title="Увімкнути/вимкнути звук">
+            🔊
+        </button>
+    </div>
+
+    <script src="localization.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
