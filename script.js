@@ -4,12 +4,24 @@ class HolographicCard {
         this.audioContext = null;
         this.isFlipped = false;
         this.localization = null;
+        this.neuroShader = null;
+        this.isMobile = this.detectMobile();
+        this.touchActive = false;
+        this.mobileAnimationActive = false;
+        this.mobileAnimationTimeout = null;
         
         this.initializeElements();
         this.initializeLocalization();
         this.initializeAudio();
         this.initializeGlowPointer();
+        this.initializeNeuroEffect();
         this.bindEvents();
+    }
+
+    detectMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+               (typeof window.orientation !== "undefined") || 
+               window.matchMedia("(max-width: 768px)").matches;
     }
 
     initializeLocalization() {
@@ -34,6 +46,7 @@ class HolographicCard {
         this.bookingForm = document.getElementById('bookingForm');
         this.soundToggle = document.getElementById('soundToggle');
         this.closeModal = document.getElementById('closeModal');
+        this.neuroCanvas = document.getElementById('neuroCanvas');
         
         this.bookShowBtn = document.getElementById('bookShowBtn');
         this.listenBtn = document.getElementById('listenBtn');
@@ -61,17 +74,41 @@ class HolographicCard {
         }
     }
 
+    initializeNeuroEffect() {
+        if (!this.neuroCanvas) {
+            console.log('Neuro canvas not found');
+            return;
+        }
+        
+        try {
+            console.log('Initializing neuro shader...');
+            this.neuroShader = new NeuroShader(this.neuroCanvas, this.isMobile);
+            this.neuroShader.init();
+            console.log('Neuro shader initialized successfully');
+        } catch (e) {
+            console.log('WebGL not supported, neuro effect disabled:', e);
+            this.neuroCanvas.style.display = 'none';
+        }
+    }
+
     bindEvents() {
-        // Card flip
+        // Card flip - different logic for mobile vs desktop
         this.card.addEventListener('click', (e) => {
             if (!e.target.closest('.btn')) {
-                this.flipCard();
+                if (this.isMobile) {
+                    this.handleMobileTap();
+                } else {
+                    this.flipCard();
+                }
             }
         });
 
-        // Card 3D hover effect
-        this.card.addEventListener('mousemove', (e) => this.handleCardHover(e));
-        this.card.addEventListener('mouseleave', () => this.resetCardTransform());
+        // Only add desktop hover effects if not mobile
+        if (!this.isMobile) {
+            this.card.addEventListener('mousemove', (e) => this.handleCardHover(e));
+            this.card.addEventListener('mouseenter', () => this.handleCardMouseEnter());
+            this.card.addEventListener('mouseleave', () => this.handleCardMouseLeave());
+        }
 
         // Button actions
         this.bookShowBtn.addEventListener('click', () => this.openBookingModal());
@@ -109,15 +146,6 @@ class HolographicCard {
         if (this.card.classList.contains('flipped')) return;
 
         const rect = this.card.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        const mouseX = e.clientX - centerX;
-        const mouseY = e.clientY - centerY;
-        
-        // Calculate rotation values (very subtle)
-        const rotateX = -(mouseY / rect.height) * 10; // Max 10 degrees
-        const rotateY = (mouseX / rect.width) * 10;   // Max 10 degrees
         
         // Calculate mouse position relative to card
         const mouseXPercent = ((e.clientX - rect.left) / rect.width) * 100;
@@ -125,20 +153,102 @@ class HolographicCard {
         
         const cardFront = this.card.querySelector('.card-front');
         
-        // Apply transform
-        this.card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        this.card.style.transition = 'transform 0.1s ease-out';
-        
         // Update mouse position for border glow
         cardFront.style.setProperty('--mouse-x', `${mouseXPercent}%`);
         cardFront.style.setProperty('--mouse-y', `${mouseYPercent}%`);
+        
+        // Update neuro shader
+        if (this.neuroShader) {
+            this.neuroShader.updatePointer(
+                (e.clientX - rect.left) / rect.width,
+                1 - (e.clientY - rect.top) / rect.height
+            );
+        }
+    }
+
+    handleCardMouseEnter() {
+        // Show neuro canvas
+        if (this.neuroCanvas) {
+            this.neuroCanvas.classList.add('active');
+        }
+        // Activate neuro shader
+        if (this.neuroShader) {
+            this.neuroShader.show();
+        }
+        // Add slight scale increase
+        this.card.style.transform = 'scale(1.02)';
+        this.card.style.transition = 'transform 0.3s ease';
+    }
+
+    handleCardMouseLeave() {
+        this.resetCardTransform();
+        // Hide neuro canvas
+        if (this.neuroCanvas) {
+            this.neuroCanvas.classList.remove('active');
+        }
+        // Deactivate neuro shader
+        if (this.neuroShader) {
+            this.neuroShader.hide();
+        }
     }
 
     resetCardTransform() {
         if (this.card.classList.contains('flipped')) return;
         
         this.card.style.transform = '';
-        this.card.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        this.card.style.transition = 'transform 0.3s ease';
+    }
+
+    handleMobileTap() {
+        // Prevent multiple taps during animation
+        if (this.mobileAnimationActive) return;
+        
+        this.mobileAnimationActive = true;
+        
+        // Clear any existing timeout
+        if (this.mobileAnimationTimeout) {
+            clearTimeout(this.mobileAnimationTimeout);
+        }
+        
+        // Phase 1: Scale down + show neuro effect (0-200ms)
+        this.card.style.transform = 'scale(0.97)';
+        this.card.style.transition = 'transform 0.2s ease-out';
+        
+        // Show neuro effect immediately
+        if (this.neuroCanvas) {
+            this.neuroCanvas.classList.add('active');
+        }
+        if (this.neuroShader) {
+            this.neuroShader.show();
+        }
+        
+        this.playSound('click');
+        
+        // Phase 2: Hold the effect for 1.5 seconds (200-1700ms)
+        setTimeout(() => {
+            // Phase 3: Start scaling back up (1700-2200ms)
+            this.card.style.transform = 'scale(1)';
+            this.card.style.transition = 'transform 0.5s ease-in-out';
+            
+            // Phase 4: At 2000ms (0.3s before scale completes), start hiding neuro and flip
+            this.mobileAnimationTimeout = setTimeout(() => {
+                // Hide neuro effect
+                if (this.neuroCanvas) {
+                    this.neuroCanvas.classList.remove('active');
+                }
+                if (this.neuroShader) {
+                    this.neuroShader.hide();
+                }
+                
+                // Flip the card
+                this.flipCard();
+                
+                // Reset animation flag
+                this.mobileAnimationActive = false;
+                
+            }, 1800); // 1.8s total (200 + 1500 + 100ms buffer)
+            
+        }, 1500); // Hold for 1.5s
     }
 
     flipCard() {
@@ -148,6 +258,11 @@ class HolographicCard {
         // Reset any hover transforms before flipping
         this.card.style.transform = '';
         this.card.style.transition = '';
+        
+        // Toggle neuro canvas blur and z-index
+        if (this.neuroCanvas) {
+            this.neuroCanvas.classList.toggle('clicked');
+        }
         
         this.playSound('flip');
     }
@@ -337,9 +452,147 @@ const styleSheet = document.createElement('style');
 styleSheet.textContent = notificationStyles;
 document.head.appendChild(styleSheet);
 
+class NeuroShader {
+    constructor(canvas, isMobile = false) {
+        this.canvas = canvas;
+        this.gl = null;
+        this.program = null;
+        this.uniforms = {};
+        this.pointer = { x: 0.5, y: 0.5 };
+        this.intensity = 0;
+        this.targetIntensity = 0;
+        this.isHovering = false;
+        this.isMobile = isMobile;
+        this.reducedQuality = isMobile; // Use reduced quality on mobile
+    }
+
+    init() {
+        // Use lower resolution on mobile for better performance
+        const maxPixelRatio = this.isMobile ? 1 : 2;
+        const devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatio);
+        
+        this.canvas.width = this.canvas.offsetWidth * devicePixelRatio;
+        this.canvas.height = this.canvas.offsetHeight * devicePixelRatio;
+
+        this.gl = this.canvas.getContext('webgl') || this.canvas.getContext('experimental-webgl');
+        if (!this.gl) {
+            throw new Error('WebGL not supported');
+        }
+
+        this.setupShaders();
+        this.setupGeometry();
+        this.render();
+
+        // Handle window resize for responsive canvas
+        window.addEventListener('resize', () => this.handleResize());
+    }
+
+    setupShaders() {
+        const vertexShader = this.createShader(this.gl.VERTEX_SHADER, document.getElementById('vertexShader').innerHTML);
+        const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, document.getElementById('fragmentShader').innerHTML);
+
+        this.program = this.gl.createProgram();
+        this.gl.attachShader(this.program, vertexShader);
+        this.gl.attachShader(this.program, fragmentShader);
+        this.gl.linkProgram(this.program);
+
+        if (!this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS)) {
+            console.error('Unable to initialize shader program:', this.gl.getProgramInfoLog(this.program));
+            return;
+        }
+
+        this.gl.useProgram(this.program);
+
+        // Get uniform locations
+        this.uniforms.u_time = this.gl.getUniformLocation(this.program, 'u_time');
+        this.uniforms.u_ratio = this.gl.getUniformLocation(this.program, 'u_ratio');
+        this.uniforms.u_pointer_position = this.gl.getUniformLocation(this.program, 'u_pointer_position');
+        this.uniforms.u_intensity = this.gl.getUniformLocation(this.program, 'u_intensity');
+
+        // Set initial ratio
+        const ratio = this.canvas.width / this.canvas.height;
+        this.gl.uniform1f(this.uniforms.u_ratio, ratio);
+    }
+
+    createShader(type, source) {
+        const shader = this.gl.createShader(type);
+        this.gl.shaderSource(shader, source);
+        this.gl.compileShader(shader);
+
+        if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+            console.error('Shader compilation error:', this.gl.getShaderInfoLog(shader));
+            this.gl.deleteShader(shader);
+            return null;
+        }
+
+        return shader;
+    }
+
+    setupGeometry() {
+        const vertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
+        const vertexBuffer = this.gl.createBuffer();
+        
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, vertices, this.gl.STATIC_DRAW);
+
+        const positionLocation = this.gl.getAttribLocation(this.program, 'a_position');
+        this.gl.enableVertexAttribArray(positionLocation);
+        this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, 0, 0);
+    }
+
+    updatePointer(x, y) {
+        this.pointer.x = x;
+        this.pointer.y = y;
+    }
+
+    show() {
+        this.targetIntensity = 1.0;
+    }
+
+    hide() {
+        this.targetIntensity = 0;
+    }
+
+    handleResize() {
+        const maxPixelRatio = this.isMobile ? 1 : 2;
+        const devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatio);
+        
+        this.canvas.width = this.canvas.offsetWidth * devicePixelRatio;
+        this.canvas.height = this.canvas.offsetHeight * devicePixelRatio;
+        
+        // Update ratio uniform
+        const ratio = this.canvas.width / this.canvas.height;
+        this.gl.uniform1f(this.uniforms.u_ratio, ratio);
+    }
+
+    render() {
+        // Smooth intensity transition
+        this.intensity += (this.targetIntensity - this.intensity) * 0.1;
+
+        // Clear and set viewport
+        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+
+        // Update uniforms
+        this.gl.uniform1f(this.uniforms.u_time, performance.now());
+        this.gl.uniform2f(this.uniforms.u_pointer_position, this.pointer.x, this.pointer.y);
+        this.gl.uniform1f(this.uniforms.u_intensity, this.intensity);
+
+        // Enable blending for transparency
+        this.gl.enable(this.gl.BLEND);
+        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+
+        // Draw
+        this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
+
+        // Continue animation
+        requestAnimationFrame(() => this.render());
+    }
+}
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
-    new HolographicCard();
+    window.holographicCard = new HolographicCard();
 });
 
 // Handle audio context resume (required by some browsers)

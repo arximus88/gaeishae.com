@@ -34,6 +34,31 @@ body {
     z-index: 1;
 }
 
+.neuro-canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 450px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease, z-index 0s, filter 0.3s ease;
+    border-radius: var(--radius);
+    z-index: 1;
+    background: transparent;
+    filter: blur(0px);
+}
+
+.neuro-canvas.active {
+    opacity: 0.8;
+}
+
+.neuro-canvas.clicked {
+    z-index: -1;
+    filter: blur(24px);
+}
+
 .card {
     position: relative;
     width: 300px;
@@ -43,6 +68,7 @@ body {
     cursor: pointer;
     margin: 20px;
     will-change: transform;
+    z-index: 1;
 }
 
 .card.flipped {
@@ -410,19 +436,96 @@ body {
 }
 
 /* Responsive */
-@media (max-width: 500px) {
+@media (max-width: 768px) {
     .card {
-        width: 85vw;
-        height: 380px;
+        width: 280px;
+        height: 420px;
+        margin: 15px;
     }
     
-    .logo-text {
-        font-size: 2.5rem;
+    .neuro-canvas {
+        width: 280px;
+        height: 420px;
+    }
+    
+    .sound-toggle, .lang-toggle {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+    
+    .modal-content {
+        margin: 8% auto;
+        padding: 25px;
+    }
+}
+
+@media (max-width: 500px) {
+    .card {
+        width: 260px;
+        height: 390px;
+        margin: 10px;
+    }
+    
+    .neuro-canvas {
+        width: 260px;
+        height: 390px;
+    }
+    
+    .logo-text.fallback {
+        font-size: 2.2rem;
+    }
+    
+    .card-content h2 {
+        font-size: 1.3rem;
+    }
+    
+    .card-content p {
+        font-size: 0.85rem;
+    }
+    
+    .btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .sound-toggle, .lang-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
     }
     
     .modal-content {
         margin: 10% auto;
         padding: 20px;
+        width: 95%;
+    }
+}
+
+@media (max-width: 350px) {
+    .card {
+        width: 240px;
+        height: 360px;
+        margin: 8px;
+    }
+    
+    .neuro-canvas {
+        width: 240px;
+        height: 360px;
+    }
+    
+    .logo-text.fallback {
+        font-size: 1.8rem;
+    }
+    
+    .sound-toggle {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .lang-toggle {
+        bottom: 15px;
+        left: 15px;
     }
 }
 
