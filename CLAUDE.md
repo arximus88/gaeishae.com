@@ -29,9 +29,10 @@ This is a holographic business card website for artist GÆISHÆ. The site featur
 ├── index.html          # Main holographic card page
 ├── styles.css          # CSS animations and holographic effects
 ├── script.js           # Card flip logic and sound handling
-├── sounds/             # Audio files for interactions
-├── assets/             # Images and logos
-└── worker.js           # Cloudflare Worker for Telegram integration
+├── localization.js     # Multi-language support (UK/EN)
+├── logo.mp4           # Video logo for holographic effect
+├── neuro-noise-glsl-shader/  # GLSL shader effects (third-party)
+└── worker.js          # Cloudflare Worker for Telegram integration (not in repo)
 ```
 
 ## Key Technical Requirements
@@ -43,8 +44,14 @@ This is a holographic business card website for artist GÆISHÆ. The site featur
 
 **Card Animation:**
 - 3D flip animation using CSS transforms
-- Front: GÆISHÆ logo with holographic effect
+- Front: GÆISHÆ logo with holographic effect (video with fallback text)
 - Back: Brief description + action buttons (Book Show, Listen to Song, Social Links)
+
+**Multilingual Support:**
+- Ukrainian (default) and English languages
+- Automatic language detection from browser/URL/localStorage
+- Dynamic content switching with localization.js
+- Language toggle button with flag indicators
 
 **Sound Integration:**
 - Brief "ding" or magical sound on color transitions
@@ -69,6 +76,15 @@ npx http-server
 
 # Test Cloudflare Worker locally
 npx wrangler dev worker.js
+```
+
+**Testing:**
+```bash
+# Run Playwright tests
+npx playwright test
+
+# Run tests in headed mode
+npx playwright test --headed
 ```
 
 **Deployment:**
