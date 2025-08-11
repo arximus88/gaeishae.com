@@ -292,11 +292,11 @@ body {
 	margin-bottom: 0;
 	background: linear-gradient(
 		90deg,
-		#ea5a0b 0%,
-		#6c0e38 50.52%,
-		#044656 67.66%,
-		#44714b 83.4%,
-		#99590d 100%
+		#a86642 0%,
+		#97466a 50.52%,
+		#3b7685 67.66%,
+		#57815d 83.4%,
+		#997549 100%
 	);
 	background-clip: text;
 	-webkit-background-clip: text;
@@ -582,11 +582,10 @@ body {
 		width: 95%;
 	}
 
-
-	}
 	.logo-video {
 		filter: saturate(0.8) brightness(0.9);
 	}
+    
 }
 
 @media (max-width: 391px) {

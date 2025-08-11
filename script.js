@@ -284,13 +284,13 @@ class HolographicCard {
 
     openMusicLink() {
         // Replace with actual music link
-        window.open('https://open.spotify.com/artist/your-artist-id', '_blank');
+        window.open('https://open.spotify.com/', '_blank');
         this.playSound('click');
     }
 
     openSocialLinks() {
         // Replace with actual Linktree URL
-        window.open('https://linktr.ee/gaeishae', '_blank');
+        window.open('https://linktr.ee/melting_butter', '_blank');
         this.playSound('click');
     }
 
