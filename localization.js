@@ -17,7 +17,8 @@ const translations = {
         submitBtn: "Надіслати заявку",
         successMessage: "Заявку надіслано! З вами зв'яжуться найближчим часом.",
         errorMessage: "Помилка відправки. Спробуйте ще раз або зв'яжіться напряму.",
-        soundToggleTitle: "Увімкнути/вимкнути звук"
+        soundToggleTitle: "Увімкнути/вимкнути звук",
+        touchInstruction: "Доторкнись до картки"
     },
     en: {
         whoIs: "Who is GÆISHÆ?",
@@ -37,7 +38,8 @@ const translations = {
         submitBtn: "Send Request",
         successMessage: "Request sent! We will contact you soon.",
         errorMessage: "Sending error. Please try again or contact directly.",
-        soundToggleTitle: "Toggle sound on/off"
+        soundToggleTitle: "Toggle sound on/off",
+        touchInstruction: "Touch the card"
     }
 };
 

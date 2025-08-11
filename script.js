@@ -211,8 +211,8 @@ class HolographicCard {
         }
         
         // Phase 1: Scale down + show neuro effect (0-200ms)
-        this.card.style.transform = 'scale(0.97)';
-        this.card.style.transition = 'transform 0.2s ease-out';
+        this.card.style.transform = 'scale(0.92)';
+        this.card.style.transition = 'transform 1.5s ease-out';
         
         // Show neuro effect immediately
         if (this.neuroCanvas) {
@@ -246,7 +246,7 @@ class HolographicCard {
                 // Reset animation flag
                 this.mobileAnimationActive = false;
                 
-            }, 1800); // 1.8s total (200 + 1500 + 100ms buffer)
+            }, 300); // 1.8s total (200 + 1500 + 100ms buffer)
             
         }, 1500); // Hold for 1.5s
     }

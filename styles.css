@@ -34,6 +34,21 @@ body {
     z-index: 1;
 }
 
+.touch-instruction {
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+    font-weight: 300;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInInstruction 0.6s ease-out 3.5s forwards;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
 .neuro-canvas {
     position: absolute;
     top: 50%;
@@ -435,6 +450,17 @@ body {
     }
 }
 
+@keyframes fadeInInstruction {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .card {
@@ -457,6 +483,11 @@ body {
     .modal-content {
         margin: 8% auto;
         padding: 25px;
+    }
+    
+    .touch-instruction {
+        bottom: -50px;
+        font-size: 0.85rem;
     }
 }
 
@@ -499,6 +530,11 @@ body {
         margin: 10% auto;
         padding: 20px;
         width: 95%;
+    }
+    
+    .touch-instruction {
+        bottom: -40px;
+        font-size: 0.8rem;
     }
 }
 
