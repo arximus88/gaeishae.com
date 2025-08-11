@@ -124,8 +124,8 @@ class Localization {
 
             @media (max-width: 500px) {
                 .lang-toggle {
-                    width: 45px;
-                    height: 45px;
+                    width: 40px;
+                    height: 40px;
                     font-size: 20px;
                 }
             }
