@@ -202,13 +202,17 @@ Phase 4 (2000ms): Hide neuro, execute flip, reset state
 python -m http.server 8000
 # or
 npx http-server
+# or use VS Code Live Server extension
 
-# Test Cloudflare Worker locally
+# Test Cloudflare Worker locally (requires wrangler.toml config)
 npx wrangler dev worker.js
 ```
 
 **Testing:**
 ```bash
+# Install Playwright browsers first (if needed)
+npx playwright install
+
 # Run Playwright tests
 npx playwright test
 

@@ -1,168 +1,234 @@
 <!DOCTYPE html>
 <html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GÆISHÆ - Holographic Business Card</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <div class="card" id="businessCard">
-            <!-- Front of card -->
-            <div class="card-face card-front">
-                <div class="holographic-logo">
-                    <video class="logo-video" autoplay loop muted playsinline>
-                        <source src="logo.mp4" type="video/mp4">
-                        <h1 class="logo-text fallback">GÆISHÆ</h1>
-                    </video>
-                </div>
-            </div>
-            
-            <!-- Back of card -->
-            <div class="card-face card-back">
-                <div class="card-content">
-                    <h2 data-i18n="whoIs">Хто така GÆISHÆ?</h2>
-                    <p data-i18n="tagline">Артистка • Виконавиця • Творець</p>
-                    
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" id="bookShowBtn">
-                            <span>📅</span>
-                            <span data-i18n="bookShow">Забронювати шоу</span>
-                        </button>
-                        
-                        <button class="btn btn-secondary" id="listenBtn">
-                            <span>🎵</span>
-                            <span data-i18n="listenSong">Прослухати пісню</span>
-                        </button>
-                        
-                        <button class="btn btn-tertiary" id="socialBtn">
-                            <span>🔗</span>
-                            <span data-i18n="socialLinks">Соцмережі</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="touch-instruction" data-i18n="touchInstruction">Доторкнись до картки</div>
-        <!-- Booking Form Modal -->
-        <div class="modal" id="bookingModal">
-            <div class="modal-content">
-                <span class="close" id="closeModal">&times;</span>
-                <h3 data-i18n="bookingTitle">Забронювати шоу</h3>
-                <form id="bookingForm">
-                    <div class="form-group">
-                        <label for="name" data-i18n="nameLabel">Ваше ім'я:</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="contact" data-i18n="contactLabel">Контакт (телефон/email):</label>
-                        <input type="text" id="contact" name="contact" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="event" data-i18n="eventLabel">Для кого шоу:</label>
-                        <input type="text" id="event" name="event" data-i18n="eventPlaceholder" placeholder="Опишіть подію">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="location" data-i18n="locationLabel">Де:</label>
-                        <input type="text" id="location" name="location" data-i18n="locationPlaceholder" placeholder="Місце проведення">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="expectations" data-i18n="expectationsLabel">Що очікуєте:</label>
-                        <textarea id="expectations" name="expectations" rows="3" data-i18n="expectationsPlaceholder" placeholder="Опишіть ваші очікування"></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" data-i18n="submitBtn">Надіслати заявку</button>
-                </form>
-            </div>
-        </div>
-        
-        <!-- Neuro effect canvas -->
-        <canvas id="neuroCanvas" class="neuro-canvas"></canvas>
-    </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>GÆISHÆ - Holographic Business Card</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap"
+			rel="stylesheet" />
+		<link rel="stylesheet" href="styles.css" />
+	</head>
+	<body>
+		<div class="container">
+			<div class="card" id="businessCard">
+				<!-- Front of card -->
+				<div class="card-face card-front">
+					<div class="holographic-logo">
+						<video
+							class="logo-video"
+							autoplay
+							loop
+							muted
+							playsinline>
+							<source src="logo.mp4" type="video/mp4" />
+							<h1 class="logo-text fallback">GÆISHÆ</h1>
+						</video>
+					</div>
+				</div>
 
-    <!-- Sound toggle -->
-    <button class="sound-toggle" id="soundToggle" data-i18n-title="soundToggleTitle" title="Увімкнути/вимкнути звук">
-        🔊
-    </button>
+				<!-- Back of card -->
+				<div class="card-face card-back">
+					<div class="card-content">
+						<div class="top-block">
+							<div class="geashae-img"></div>
+							<h2 data-i18n="whoIs">Хто така GÆISHÆ?</h2>
+							<p data-i18n="tagline">
+								Артистка • Виконавиця • Творець
+							</p>
+						</div>
 
-    <!-- Shaders for neuro effect -->
-    <script type="x-shader/x-vertex" id="vertexShader">
-        precision mediump float;
-        varying vec2 vUv;
-        attribute vec2 a_position;
+						<div class="action-buttons">
+							<button class="btn btn-primary" id="bookShowBtn">
+								<img
+									src="images/icon_show.svg"
+									alt=""
+									class="icon" />
+								<span data-i18n="bookShow"
+									>Забронювати шоу</span
+								>
+							</button>
 
-        void main() {
-            vUv = .5 * (a_position + 1.);
-            gl_Position = vec4(a_position, 0.0, 1.0);
-        }
-    </script>
+							<button class="btn btn-secondary" id="listenBtn">
+								<img
+									src="images/icon_music.svg"
+									alt=""
+									class="icon" />
+								<span data-i18n="listenSong"
+									>Прослухати пісню</span
+								>
+							</button>
 
-    <script type="x-shader/x-fragment" id="fragmentShader">
-        precision mediump float;
-        varying vec2 vUv;
-        uniform float u_time;
-        uniform float u_ratio;
-        uniform vec2 u_pointer_position;
-        uniform float u_intensity;
+							<button class="btn btn-tertiary" id="socialBtn">
+								<img
+									src="images/icon_socials.svg"
+									alt=""
+									class="icon" />
+								<span data-i18n="socialLinks">Соцмережі</span>
+							</button>
+						</div>
+					</div>
+				</div>
+				<!-- Neuro effect canvas -->
+				<canvas id="neuroCanvas" class="neuro-canvas"></canvas>
+			</div>
+			<div class="touch-instruction" data-i18n="touchInstruction">
+				Доторкнись до картки
+			</div>
+			<!-- Booking Form Modal -->
+			<div class="modal" id="bookingModal">
+				<div class="modal-content">
+					<span class="close" id="closeModal">&times;</span>
+					<h3 data-i18n="bookingTitle">Забронювати шоу</h3>
+					<form id="bookingForm">
+						<div class="form-group">
+							<label for="name" data-i18n="nameLabel"
+								>Ваше ім'я:</label
+							>
+							<input type="text" id="name" name="name" required />
+						</div>
 
-        vec2 rotate(vec2 uv, float th) {
-            return mat2(cos(th), sin(th), -sin(th), cos(th)) * uv;
-        }
+						<div class="form-group">
+							<label for="contact" data-i18n="contactLabel"
+								>Контакт (телефон/email):</label
+							>
+							<input
+								type="text"
+								id="contact"
+								name="contact"
+								required />
+						</div>
 
-        float neuro_shape(vec2 uv, float t, float p) {
-            vec2 sine_acc = vec2(0.);
-            vec2 res = vec2(0.);
-            float scale = 8.;
+						<div class="form-group">
+							<label for="event" data-i18n="eventLabel"
+								>Для кого шоу:</label
+							>
+							<input
+								type="text"
+								id="event"
+								name="event"
+								data-i18n="eventPlaceholder"
+								placeholder="Опишіть подію" />
+						</div>
 
-            // Reduce iterations on mobile for better performance
-            for (int j = 0; j < 15; j++) {
-                uv = rotate(uv, 1.);
-                sine_acc = rotate(sine_acc, 1.);
-                vec2 layer = uv * scale + float(j) + sine_acc - t;
-                sine_acc += sin(layer) + 2.4 * p;
-                res += (.5 + .5 * cos(layer)) / scale;
-                scale *= (1.2);
-            }
-            return res.x + res.y;
-        }
+						<div class="form-group">
+							<label for="location" data-i18n="locationLabel"
+								>Де:</label
+							>
+							<input
+								type="text"
+								id="location"
+								name="location"
+								data-i18n="locationPlaceholder"
+								placeholder="Місце проведення" />
+						</div>
 
-        void main() {
-            vec2 uv = .5 * vUv;
-            uv.x *= u_ratio;
+						<div class="form-group">
+							<label
+								for="expectations"
+								data-i18n="expectationsLabel"
+								>Що очікуєте:</label
+							>
+							<textarea
+								id="expectations"
+								name="expectations"
+								rows="3"
+								data-i18n="expectationsPlaceholder"
+								placeholder="Опишіть ваші очікування"></textarea>
+						</div>
 
-            vec2 pointer = vUv - u_pointer_position;
-            pointer.x *= u_ratio;
-            float p = clamp(length(pointer), 0., 1.);
-            p = .5 * pow(1. - p, 2.);
+						<button
+							type="submit"
+							class="btn btn-primary"
+							data-i18n="submitBtn">
+							Надіслати заявку
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
 
-            float t = .001 * u_time;
-            vec3 color = vec3(0.);
+		<!-- Sound toggle -->
+		<button
+			class="sound-toggle"
+			id="soundToggle"
+			data-i18n-title="soundToggleTitle"
+			title="Увімкнути/вимкнути звук">
+			🔊
+		</button>
 
-            float noise = neuro_shape(uv, t, p);
+		<!-- Shaders for neuro effect -->
+		<script type="x-shader/x-vertex" id="vertexShader">
+			precision mediump float;
+			varying vec2 vUv;
+			attribute vec2 a_position;
 
-            noise = 1.2 * pow(noise, 3.);
-            noise += pow(noise, 10.);
-            noise = max(.0, noise - .5);
-            noise *= (1. - length(vUv - .5));
+			void main() {
+			    vUv = .5 * (a_position + 1.);
+			    gl_Position = vec4(a_position, 0.0, 1.0);
+			}
+		</script>
 
-            // Holographic colors: green to red shift based on time
-            color = normalize(vec3(.2 + .3 * sin(t * 2.), .5 + .4 * cos(t * 3.), .1 + .3 * cos(t * 1.5)));
+		<script type="x-shader/x-fragment" id="fragmentShader">
+			precision mediump float;
+			varying vec2 vUv;
+			uniform float u_time;
+			uniform float u_ratio;
+			uniform vec2 u_pointer_position;
+			uniform float u_intensity;
 
-            color = color * noise * u_intensity;
+			vec2 rotate(vec2 uv, float th) {
+			    return mat2(cos(th), sin(th), -sin(th), cos(th)) * uv;
+			}
 
-            gl_FragColor = vec4(color, noise * u_intensity);
-        }
-    </script>
+			float neuro_shape(vec2 uv, float t, float p) {
+			    vec2 sine_acc = vec2(0.);
+			    vec2 res = vec2(0.);
+			    float scale = 8.;
 
-    <script src="localization.js"></script>
-    <script src="script.js"></script>
-</body>
+			    // Reduce iterations on mobile for better performance
+			    for (int j = 0; j < 15; j++) {
+			        uv = rotate(uv, 1.);
+			        sine_acc = rotate(sine_acc, 1.);
+			        vec2 layer = uv * scale + float(j) + sine_acc - t;
+			        sine_acc += sin(layer) + 2.4 * p;
+			        res += (.5 + .5 * cos(layer)) / scale;
+			        scale *= (1.2);
+			    }
+			    return res.x + res.y;
+			}
+
+			void main() {
+			    vec2 uv = .5 * vUv;
+			    uv.x *= u_ratio;
+
+			    vec2 pointer = vUv - u_pointer_position;
+			    pointer.x *= u_ratio;
+			    float p = clamp(length(pointer), 0., 1.);
+			    p = .5 * pow(1. - p, 2.);
+
+			    float t = .001 * u_time;
+			    vec3 color = vec3(0.);
+
+			    float noise = neuro_shape(uv, t, p);
+
+			    noise = 1.2 * pow(noise, 3.);
+			    noise += pow(noise, 10.);
+			    noise = max(.0, noise - .5);
+			    noise *= (1. - length(vUv - .5));
+
+			    // Holographic colors: green to red shift based on time
+			    color = normalize(vec3(.2 + .3 * sin(t * 2.), .5 + .4 * cos(t * 3.), .1 + .3 * cos(t * 1.5)));
+
+			    color = color * noise * u_intensity;
+
+			    gl_FragColor = vec4(color, noise * u_intensity);
+			}
+		</script>
+
+		<script src="localization.js"></script>
+		<script src="script.js"></script>
+	</body>
 </html>
