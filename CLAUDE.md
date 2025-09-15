@@ -31,8 +31,12 @@ This is a holographic business card website for artist GÆISHÆ. The site featur
 ├── script.js           # Card flip logic and sound handling
 ├── localization.js     # Multi-language support (UK/EN)
 ├── logo.mp4           # Video logo for holographic effect
+├── batter-video.mp4   # Alternative video asset
+├── images/            # Icon assets for buttons (SVG/PNG variants)
 ├── neuro-noise-glsl-shader/  # GLSL shader effects (third-party)
-└── worker.js          # Cloudflare Worker for Telegram integration (not in repo)
+├── package.json       # Playwright testing dependency
+├── task.md           # Ukrainian technical specification
+└── worker.js         # Cloudflare Worker for Telegram integration (not in repo)
 ```
 
 ## Key Technical Requirements
@@ -213,11 +217,14 @@ npx wrangler dev worker.js
 # Install Playwright browsers first (if needed)
 npx playwright install
 
-# Run Playwright tests
+# Run Playwright tests (no test files currently exist)
 npx playwright test
 
 # Run tests in headed mode
 npx playwright test --headed
+
+# Note: Test files would need to be created in a tests/ directory
+# or with .test.js/.spec.js naming convention
 ```
 
 **Deployment:**
