@@ -28,14 +28,17 @@ This is a holographic business card website for artist GÆISHÆ. The site featur
 ```
 ├── index.html          # Main holographic card page
 ├── styles.css          # CSS animations and holographic effects
-├── script.js           # Card flip logic and sound handling
-├── localization.js     # Multi-language support (UK/EN)
+├── script.js           # HolographicCard class and main logic
+├── localization.js     # Multi-language support (UK/EN translations)
 ├── logo.mp4           # Video logo for holographic effect
 ├── batter-video.mp4   # Alternative video asset
 ├── images/            # Icon assets for buttons (SVG/PNG variants)
-├── neuro-noise-glsl-shader/  # GLSL shader effects (third-party)
-├── package.json       # Playwright testing dependency
+├── neuro-noise-glsl-shader/  # GLSL shader effects (NeuroShader class)
+│   ├── src/script.js   # WebGL shader implementation
+│   └── src/style.css   # Shader-specific styles
+├── package.json       # Playwright testing dependency only
 ├── task.md           # Ukrainian technical specification
+├── CLAUDE.md         # This documentation file
 └── worker.js         # Cloudflare Worker for Telegram integration (not in repo)
 ```
 
@@ -227,6 +230,14 @@ npx playwright test --headed
 # or with .test.js/.spec.js naming convention
 ```
 
+**Linting & Validation:**
+```bash
+# No formal linting setup - project uses browser DevTools for validation
+# Check browser console for JavaScript errors
+# Validate HTML at https://validator.w3.org/
+# Check CSS at https://jigsaw.w3.org/css-validator/
+```
+
 **Deployment:**
 ```bash
 # Deploy to Cloudflare Pages
@@ -238,11 +249,13 @@ npx wrangler deploy worker.js
 
 ## Important Notes
 
-- **No Tailwind CSS** - Project specifically avoids CSS frameworks
+- **No CSS Frameworks** - Project specifically avoids Tailwind, Bootstrap, etc.
+- **Vanilla JavaScript Only** - No React, Vue, jQuery, or other frameworks
 - **Cloudflare-first architecture** - Optimized for Cloudflare Pages + Workers
-- **Performance-focused** - Minimal dependencies, fast loading
+- **Performance-focused** - Minimal dependencies (only Playwright for testing)
 - **Sound UX** - Audio plays only on user interaction, never autoplay
 - **Mobile-responsive** - Card animations must work on touch devices
+- **Progressive Enhancement** - Core functionality works without WebGL/advanced features
 
 ## Environment Variables
 

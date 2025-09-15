@@ -44,13 +44,15 @@ class HolographicCard {
         this.card = document.getElementById('businessCard');
         this.bookingModal = document.getElementById('bookingModal');
         this.bookingForm = document.getElementById('bookingForm');
+        this.portfolioModal = document.getElementById('portfolioModal');
+        this.closePortfolioModal = document.getElementById('closePortfolioModal');
         this.soundToggle = document.getElementById('soundToggle');
         this.closeModal = document.getElementById('closeModal');
         this.neuroCanvas = document.getElementById('neuroCanvas');
         
         this.bookShowBtn = document.getElementById('bookShowBtn');
         this.listenBtn = document.getElementById('listenBtn');
-        this.socialBtn = document.getElementById('socialBtn');
+        this.portfolioBtn = document.getElementById('portfolioBtn');
         
         // Handle video fallback
         this.logoVideo = document.querySelector('.logo-video');
@@ -113,13 +115,21 @@ class HolographicCard {
         // Button actions
         this.bookShowBtn.addEventListener('click', () => this.openBookingModal());
         this.listenBtn.addEventListener('click', () => this.openMusicLink());
-        this.socialBtn.addEventListener('click', () => this.openSocialLinks());
+        this.portfolioBtn.addEventListener('click', () => this.openPortfolio());
 
         // Modal events
         this.closeModal.addEventListener('click', () => this.closeBookingModal());
         this.bookingModal.addEventListener('click', (e) => {
             if (e.target === this.bookingModal) {
                 this.closeBookingModal();
+            }
+        });
+
+        // Portfolio modal events
+        this.closePortfolioModal.addEventListener('click', () => this.closePortfolioModalHandler());
+        this.portfolioModal.addEventListener('click', (e) => {
+            if (e.target === this.portfolioModal) {
+                this.closePortfolioModalHandler();
             }
         });
 
@@ -131,8 +141,12 @@ class HolographicCard {
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.bookingModal.style.display === 'block') {
-                this.closeBookingModal();
+            if (e.key === 'Escape') {
+                if (this.bookingModal.style.display === 'block') {
+                    this.closeBookingModal();
+                } else if (this.portfolioModal.style.display === 'block') {
+                    this.closePortfolioModalHandler();
+                }
             }
             if (e.key === ' ' || e.key === 'Enter') {
                 if (document.activeElement === this.card) {
@@ -288,10 +302,172 @@ class HolographicCard {
         this.playSound('click');
     }
 
-    openSocialLinks() {
-        // Replace with actual Linktree URL
-        window.open('https://linktr.ee/melting_butter', '_blank');
-        this.playSound('click');
+    async openPortfolio() {
+        this.portfolioModal.style.display = 'block';
+        this.playSound('open');
+
+        // Initialize slider if not already done
+        if (!this.portfolioSlider) {
+            await this.initializePortfolioSlider();
+        }
+    }
+
+    closePortfolioModalHandler() {
+        this.portfolioModal.style.display = 'none';
+        this.playSound('close');
+    }
+
+    async initializePortfolioSlider() {
+        try {
+            const portfolioItems = await this.fetchCloudinaryMedia();
+            this.createSlider(portfolioItems);
+        } catch (error) {
+            console.error('Error loading portfolio:', error);
+            this.showPortfolioError();
+        }
+    }
+
+    async fetchCloudinaryMedia() {
+        const cloudName = 'dnoji6mcx';
+
+        try {
+            // Fetch all resources from Cloudinary
+            const response = await fetch(
+                `https://res.cloudinary.com/${cloudName}/image/list/gaeishae.json`
+            );
+
+            if (!response.ok) {
+                // Fallback: try without tag filter, get recent uploads
+                const fallbackUrl = `https://res.cloudinary.com/${cloudName}/resources/image`;
+                console.log('Trying fallback approach for Cloudinary resources');
+                return this.createTestPortfolioItems(cloudName);
+            }
+
+            const data = await response.json();
+            return this.processCloudinaryItems(data.resources, cloudName);
+        } catch (error) {
+            console.error('Cloudinary API error:', error);
+            // Use test items with known Cloudinary structure
+            return this.createTestPortfolioItems(cloudName);
+        }
+    }
+
+    createTestPortfolioItems(cloudName) {
+        // For testing purposes, create items with common Cloudinary public_ids
+        // You should replace these with your actual uploaded media public_ids
+        return [
+            {
+                type: 'image',
+                url: `https://res.cloudinary.com/${cloudName}/image/upload/c_fill,w_800,h_600,q_auto/sample`,
+                title: 'Performance Photo 1'
+            },
+            {
+                type: 'video',
+                url: `https://res.cloudinary.com/${cloudName}/video/upload/c_scale,w_800,q_auto/samples/sea-turtle`,
+                title: 'Performance Video 1'
+            },
+            {
+                type: 'image',
+                url: `https://res.cloudinary.com/${cloudName}/image/upload/c_fill,w_800,h_600,q_auto/samples/landscapes/nature-mountains`,
+                title: 'Studio Photo 1'
+            }
+        ];
+    }
+
+    processCloudinaryItems(resources, cloudName) {
+        return resources.map((item, index) => {
+            const isVideo = item.resource_type === 'video';
+            return {
+                type: isVideo ? 'video' : 'image',
+                url: `https://res.cloudinary.com/${cloudName}/${isVideo ? 'video' : 'image'}/upload/c_scale,w_800,q_auto/${item.public_id}`,
+                title: `Portfolio Item ${index + 1}`
+            };
+        });
+    }
+
+    createSlider(items) {
+        const slider = document.getElementById('portfolio-slider');
+
+        // Clear loading content
+        slider.innerHTML = '';
+
+        // Add slides
+        items.forEach((item, index) => {
+            const slide = document.createElement('div');
+            slide.className = 'keen-slider__slide';
+
+            if (item.type === 'video') {
+                slide.innerHTML = `
+                    <video controls preload="metadata" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        <source src="${item.url}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                `;
+            } else {
+                slide.innerHTML = `
+                    <img src="${item.url}" alt="${item.title}" loading="lazy">
+                `;
+            }
+
+            slider.appendChild(slide);
+        });
+
+        // Initialize Keen Slider
+        this.portfolioSlider = new KeenSlider(slider, {
+            loop: true,
+            slides: {
+                perView: 1,
+                spacing: 0
+            },
+            created: (s) => {
+                this.updateSlideCounter(s.track.details.rel + 1, items.length);
+            },
+            slideChanged: (s) => {
+                this.updateSlideCounter(s.track.details.rel + 1, items.length);
+            }
+        });
+
+        // Setup navigation buttons
+        this.setupSliderNavigation(items.length);
+    }
+
+    setupSliderNavigation(totalSlides) {
+        const prevBtn = document.getElementById('portfolioPrev');
+        const nextBtn = document.getElementById('portfolioNext');
+
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => {
+                this.portfolioSlider.prev();
+                this.playSound('click');
+            });
+
+            nextBtn.addEventListener('click', () => {
+                this.portfolioSlider.next();
+                this.playSound('click');
+            });
+        }
+
+        this.updateSlideCounter(1, totalSlides);
+    }
+
+    updateSlideCounter(current, total) {
+        const currentSlide = document.getElementById('currentSlide');
+        const totalSlides = document.getElementById('totalSlides');
+
+        if (currentSlide) currentSlide.textContent = current;
+        if (totalSlides) totalSlides.textContent = total;
+    }
+
+    showPortfolioError() {
+        const slider = document.getElementById('portfolio-slider');
+        slider.innerHTML = `
+            <div class="keen-slider__slide loading-slide">
+                <div style="text-align: center; color: rgba(255, 255, 255, 0.8);">
+                    <p>Unable to load portfolio items.</p>
+                    <p>Please try again later.</p>
+                </div>
+            </div>
+        `;
     }
 
     async handleFormSubmission(e) {

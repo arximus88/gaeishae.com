@@ -4,7 +4,7 @@ const translations = {
         tagline: "Артистка • Виконавиця • Творець",
         bookShow: "Забронювати шоу",
         listenSong: "Прослухати пісню",
-        socialLinks: "Соцмережі",
+        viewPortfolio: "Переглянути портфоліо",
         bookingTitle: "Забронювати шоу",
         nameLabel: "Ваше ім'я:",
         contactLabel: "Контакт (телефон/email):",
@@ -18,14 +18,15 @@ const translations = {
         successMessage: "Заявку надіслано! З вами зв'яжуться найближчим часом.",
         errorMessage: "Помилка відправки. Спробуйте ще раз або зв'яжіться напряму.",
         soundToggleTitle: "Увімкнути/вимкнути звук",
-        touchInstruction: "Доторкнись до картки"
+        touchInstruction: "Доторкнись до картки",
+        portfolioTitle: "Портфоліо"
     },
     en: {
         whoIs: "Who is GÆISHÆ?",
         tagline: "Artist • Performer • Creator",
         bookShow: "Book a Show",
         listenSong: "Listen to Song",
-        socialLinks: "Social Links",
+        viewPortfolio: "View Portfolio",
         bookingTitle: "Book a Show",
         nameLabel: "Your name:",
         contactLabel: "Contact (phone/email):",
@@ -39,7 +40,8 @@ const translations = {
         successMessage: "Request sent! We will contact you soon.",
         errorMessage: "Sending error. Please try again or contact directly.",
         soundToggleTitle: "Toggle sound on/off",
-        touchInstruction: "Touch the card"
+        touchInstruction: "Touch the card",
+        portfolioTitle: "Portfolio"
     }
 };
 

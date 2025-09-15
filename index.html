@@ -10,6 +10,11 @@
 			href="https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap"
 			rel="stylesheet" />
 		<link rel="stylesheet" href="styles.css" />
+		<!-- Keen Slider CSS -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css"
+		/>
 	</head>
 	<body>
 		<div class="container">
@@ -61,13 +66,31 @@
 								>
 							</button>
 
-							<button class="btn btn-tertiary" id="socialBtn">
+							<button class="btn btn-tertiary" id="portfolioBtn">
 								<img
-									src="images/icon_socials.svg"
+									src="images/icon_portfolio.svg"
 									alt=""
 									class="icon" />
-								<span data-i18n="socialLinks">Соцмережі</span>
+								<span data-i18n="viewPortfolio">Переглянути портфоліо</span>
 							</button>
+						</div>
+
+						<div class="social-icons">
+							<a href="https://tiktok.com/@butter_geisha" class="social-icon" title="TikTok" target="_blank" rel="noopener noreferrer">
+								<img src="images/social-tiktok.svg" alt="TikTok" />
+							</a>
+							<a href="https://instagram.com/gaeishae" class="social-icon" title="Instagram" target="_blank" rel="noopener noreferrer">
+								<img src="images/social-instagram.svg" alt="Instagram" />
+							</a>
+							<a href="https://www.threads.com/@gaeishae" class="social-icon" title="Threads" target="_blank" rel="noopener noreferrer">
+								<img src="images/social-threads.svg" alt="Threads" />
+							</a>
+							<a href="https://x.com/gaeishae" class="social-icon" title="X (Twitter)" target="_blank" rel="noopener noreferrer">
+								<img src="images/social-x.svg" alt="X" />
+							</a>
+							<a href="https://linktr.ee/melting_butter" class="social-icon" title="Linktree" target="_blank" rel="noopener noreferrer">
+								<img src="images/social-linktree.svg" alt="Linktree" />
+							</a>
 						</div>
 					</div>
 				</div>
@@ -146,6 +169,27 @@
 							Надіслати заявку
 						</button>
 					</form>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Portfolio Modal -->
+		<div class="modal" id="portfolioModal">
+			<div class="modal-content portfolio-content">
+				<span class="close" id="closePortfolioModal">&times;</span>
+				<h3 data-i18n="portfolioTitle">Портфоліо</h3>
+				<div id="portfolio-slider" class="keen-slider">
+					<div class="keen-slider__slide loading-slide">
+						<div class="loader">Завантаження...</div>
+					</div>
+				</div>
+				<div class="slider-controls">
+					<button class="slider-btn prev-btn" id="portfolioPrev">‹</button>
+					<div class="slide-counter">
+						<span id="currentSlide">1</span> / <span id="totalSlides">1</span>
+					</div>
+					<button class="slider-btn next-btn" id="portfolioNext">›</button>
 				</div>
 			</div>
 		</div>
@@ -228,6 +272,8 @@
 			}
 		</script>
 
+		<!-- Keen Slider JS -->
+		<script src="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.js"></script>
 		<script src="localization.js"></script>
 		<script src="script.js"></script>
 	</body>
