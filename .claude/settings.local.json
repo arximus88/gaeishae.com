@@ -15,7 +15,9 @@
       "Read(/home/arx/.config/Code/User/**)",
       "Bash(npm uninstall:*)",
       "Bash(npm install:*)",
-      "Bash(wrangler:*)"
+      "Bash(wrangler:*)",
+      "WebFetch(domain:gaeishae-com.pages.dev)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

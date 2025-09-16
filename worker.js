@@ -3,11 +3,13 @@
  * Handles booking form submissions and forwards them to Telegram
  */
 
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request))
-})
+export default {
+  async fetch(request, env, ctx) {
+    return handleRequest(request, env)
+  },
+}
 
-async function handleRequest(request) {
+async function handleRequest(request, env) {
   // Handle CORS preflight requests
   if (request.method === 'OPTIONS') {
     return handleCORS()
@@ -22,13 +24,13 @@ async function handleRequest(request) {
 
   // Handle booking submission
   if (url.pathname === '/api/submit-booking') {
-    return handleBookingSubmission(request)
+    return handleBookingSubmission(request, env)
   }
 
   return new Response('Not found', { status: 404 })
 }
 
-async function handleBookingSubmission(request) {
+async function handleBookingSubmission(request, env) {
   try {
     // Parse the booking form data
     const bookingData = await request.json()
@@ -41,7 +43,7 @@ async function handleBookingSubmission(request) {
     }
 
     // Send to Telegram
-    const telegramSuccess = await sendToTelegram(bookingData)
+    const telegramSuccess = await sendToTelegram(bookingData, env)
 
     if (telegramSuccess) {
       return createSuccessResponse('Booking request submitted successfully')
@@ -55,12 +57,18 @@ async function handleBookingSubmission(request) {
   }
 }
 
-async function sendToTelegram(bookingData) {
-  const botToken = TELEGRAM_BOT_TOKEN
-  const chatId = TELEGRAM_CHAT_ID
+async function sendToTelegram(bookingData, env) {
+  const botToken = env.TELEGRAM_BOT_TOKEN
+  const chatId = env.TELEGRAM_CHAT_ID
+
+  console.log('Bot Token available:', !!botToken)
+  console.log('Chat ID available:', !!chatId)
 
   if (!botToken || !chatId) {
-    console.error('Missing Telegram configuration')
+    console.error('Missing Telegram configuration', {
+      botToken: !!botToken,
+      chatId: !!chatId
+    })
     return false
   }
 
