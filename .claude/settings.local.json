@@ -17,7 +17,8 @@
       "Bash(npm install:*)",
       "Bash(wrangler:*)",
       "WebFetch(domain:gaeishae-com.pages.dev)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }

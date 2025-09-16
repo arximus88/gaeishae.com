@@ -101,7 +101,7 @@ async function sendToTelegram(bookingData, env) {
     }
 
   } catch (error) {
-    console.error('Error sending to Telegram:', error)
+    console.error('Error sending to Telegram:', error.message, error.stack)
     return false
   }
 }
