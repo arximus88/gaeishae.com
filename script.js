@@ -329,25 +329,50 @@ class HolographicCard {
 
     async fetchCloudinaryMedia() {
         const cloudName = 'dnoji6mcx';
+        const portfolioTag = 'geashae';
 
         try {
-            // Fetch all resources from Cloudinary
-            const response = await fetch(
-                `https://res.cloudinary.com/${cloudName}/image/list/gaeishae.json`
+            const endpoints = [
+                {
+                    type: 'image',
+                    url: `https://res.cloudinary.com/${cloudName}/image/list/${portfolioTag}.json`
+                },
+                {
+                    type: 'video',
+                    url: `https://res.cloudinary.com/${cloudName}/video/list/${portfolioTag}.json`
+                }
+            ];
+
+            const responses = await Promise.all(
+                endpoints.map(async (endpoint) => {
+                    try {
+                        const res = await fetch(endpoint.url);
+                        if (!res.ok) return null;
+                        const data = await res.json();
+                        const resources = Array.isArray(data.resources) ? data.resources : [];
+                        return resources.map((item) => ({
+                            ...item,
+                            resource_type: item.resource_type || endpoint.type
+                        }));
+                    } catch (err) {
+                        console.warn(`Cloudinary request failed for ${endpoint.type} list`, err);
+                        return null;
+                    }
+                })
             );
 
-            if (!response.ok) {
-                // Fallback: try without tag filter, get recent uploads
-                const fallbackUrl = `https://res.cloudinary.com/${cloudName}/resources/image`;
-                console.log('Trying fallback approach for Cloudinary resources');
-                return this.createTestPortfolioItems(cloudName);
+            const mergedResources = responses
+                .filter(Boolean)
+                .flat();
+
+            if (mergedResources.length > 0) {
+                return this.processCloudinaryItems(mergedResources, cloudName);
             }
 
-            const data = await response.json();
-            return this.processCloudinaryItems(data.resources, cloudName);
+            console.warn(`No Cloudinary resources found for tag "${portfolioTag}". Falling back to samples.`);
+            return this.createTestPortfolioItems(cloudName);
         } catch (error) {
             console.error('Cloudinary API error:', error);
-            // Use test items with known Cloudinary structure
             return this.createTestPortfolioItems(cloudName);
         }
     }
@@ -438,12 +463,10 @@ class HolographicCard {
         if (prevBtn && nextBtn) {
             prevBtn.addEventListener('click', () => {
                 this.portfolioSlider.prev();
-                this.playSound('click');
             });
 
             nextBtn.addEventListener('click', () => {
                 this.portfolioSlider.next();
-                this.playSound('click');
             });
         }
 
@@ -484,7 +507,7 @@ class HolographicCard {
 
         try {
             // This will be replaced with actual Cloudflare Worker endpoint
-            const response = await fetch('/api/submit-booking', {
+            const response = await fetch('https://gaeishae-booking-bot.arximus88.workers.dev/api/submit-booking', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

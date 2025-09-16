@@ -1,0 +1,17 @@
+name = "gaeishae-booking-bot"
+main = "worker.js"
+compatibility_date = "2024-09-16"
+
+# Development environment variables
+# For local development, copy these values to a .env file
+# [env.dev.vars]
+# TELEGRAM_BOT_TOKEN = "your-bot-token"
+# TELEGRAM_CHAT_ID = "your-chat-id"
+
+# Production environment variables will be set via wrangler secret
+# Don't put real credentials here
+
+# Routes for custom domain (optional)
+# [[routes]]
+# pattern = "gaeishae.com/api/*"
+# zone_name = "gaeishae.com"

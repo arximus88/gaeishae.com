@@ -3,9 +3,22 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>GÆISHÆ - Holographic Business Card</title>
+		<title>GÆISHÆ - Your show</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="icon"
+			type="image/png"
+			href="/favicon/favicon-96x96.png"
+			sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+		<link rel="shortcut icon" href="/favicon/favicon.ico" />
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="/favicon/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-title" content="GÆISHÆ" />
+		<link rel="manifest" href="/favicon/site.webmanifest" />
 		<link
 			href="https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap"
 			rel="stylesheet" />
@@ -13,8 +26,7 @@
 		<!-- Keen Slider CSS -->
 		<link
 			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css"
-		/>
+			href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css" />
 	</head>
 	<body>
 		<div class="container">
@@ -71,25 +83,60 @@
 									src="images/icon_portfolio.svg"
 									alt=""
 									class="icon" />
-								<span data-i18n="viewPortfolio">Переглянути портфоліо</span>
+								<span data-i18n="viewPortfolio"
+									>Переглянути портфоліо</span
+								>
 							</button>
 						</div>
 
 						<div class="social-icons">
-							<a href="https://tiktok.com/@butter_geisha" class="social-icon" title="TikTok" target="_blank" rel="noopener noreferrer">
-								<img src="images/social-tiktok.svg" alt="TikTok" />
+							<a
+								href="https://tiktok.com/@butter_geisha"
+								class="social-icon"
+								title="TikTok"
+								target="_blank"
+								rel="noopener noreferrer">
+								<img
+									src="images/social-tiktok.svg"
+									alt="TikTok" />
 							</a>
-							<a href="https://instagram.com/gaeishae" class="social-icon" title="Instagram" target="_blank" rel="noopener noreferrer">
-								<img src="images/social-instagram.svg" alt="Instagram" />
+							<a
+								href="https://instagram.com/gaeishae"
+								class="social-icon"
+								title="Instagram"
+								target="_blank"
+								rel="noopener noreferrer">
+								<img
+									src="images/social-instagram.svg"
+									alt="Instagram" />
 							</a>
-							<a href="https://www.threads.com/@gaeishae" class="social-icon" title="Threads" target="_blank" rel="noopener noreferrer">
-								<img src="images/social-threads.svg" alt="Threads" />
+							<a
+								href="https://www.threads.com/@gaeishae"
+								class="social-icon"
+								title="Threads"
+								target="_blank"
+								rel="noopener noreferrer">
+								<img
+									src="images/social-threads.svg"
+									alt="Threads" />
 							</a>
-							<a href="https://x.com/gaeishae" class="social-icon" title="X (Twitter)" target="_blank" rel="noopener noreferrer">
+							<a
+								href="https://x.com/gaeishae"
+								class="social-icon"
+								title="X (Twitter)"
+								target="_blank"
+								rel="noopener noreferrer">
 								<img src="images/social-x.svg" alt="X" />
 							</a>
-							<a href="https://linktr.ee/melting_butter" class="social-icon" title="Linktree" target="_blank" rel="noopener noreferrer">
-								<img src="images/social-linktree.svg" alt="Linktree" />
+							<a
+								href="https://linktr.ee/melting_butter"
+								class="social-icon"
+								title="Linktree"
+								target="_blank"
+								rel="noopener noreferrer">
+								<img
+									src="images/social-linktree.svg"
+									alt="Linktree" />
 							</a>
 						</div>
 					</div>
@@ -100,96 +147,99 @@
 			<div class="touch-instruction" data-i18n="touchInstruction">
 				Доторкнись до картки
 			</div>
-			<!-- Booking Form Modal -->
-			<div class="modal" id="bookingModal">
-				<div class="modal-content">
-					<span class="close" id="closeModal">&times;</span>
-					<h3 data-i18n="bookingTitle">Забронювати шоу</h3>
-					<form id="bookingForm">
-						<div class="form-group">
-							<label for="name" data-i18n="nameLabel"
-								>Ваше ім'я:</label
-							>
-							<input type="text" id="name" name="name" required />
-						</div>
+		</div>
 
-						<div class="form-group">
-							<label for="contact" data-i18n="contactLabel"
-								>Контакт (телефон/email):</label
-							>
-							<input
-								type="text"
-								id="contact"
-								name="contact"
-								required />
-						</div>
+		<!-- Booking Form Modal -->
+		<div class="modal" id="bookingModal">
+			<div class="modal-content">
+				<span class="close" id="closeModal">&times;</span>
+				<h3 data-i18n="bookingTitle">Забронювати шоу</h3>
+				<form id="bookingForm">
+					<div class="form-group">
+						<label for="name" data-i18n="nameLabel"
+							>Ваше ім'я:</label
+						>
+						<input type="text" id="name" name="name" required />
+					</div>
 
-						<div class="form-group">
-							<label for="event" data-i18n="eventLabel"
-								>Для кого шоу:</label
-							>
-							<input
-								type="text"
-								id="event"
-								name="event"
-								data-i18n="eventPlaceholder"
-								placeholder="Опишіть подію" />
-						</div>
+					<div class="form-group">
+						<label for="contact" data-i18n="contactLabel"
+							>Контакт (телефон/email):</label
+						>
+						<input
+							type="text"
+							id="contact"
+							name="contact"
+							required />
+					</div>
 
-						<div class="form-group">
-							<label for="location" data-i18n="locationLabel"
-								>Де:</label
-							>
-							<input
-								type="text"
-								id="location"
-								name="location"
-								data-i18n="locationPlaceholder"
-								placeholder="Місце проведення" />
-						</div>
+					<div class="form-group">
+						<label for="event" data-i18n="eventLabel"
+							>Для кого шоу:</label
+						>
+						<input
+							type="text"
+							id="event"
+							name="event"
+							data-i18n="eventPlaceholder"
+							placeholder="Опишіть подію" />
+					</div>
 
-						<div class="form-group">
-							<label
-								for="expectations"
-								data-i18n="expectationsLabel"
-								>Що очікуєте:</label
-							>
-							<textarea
-								id="expectations"
-								name="expectations"
-								rows="3"
-								data-i18n="expectationsPlaceholder"
-								placeholder="Опишіть ваші очікування"></textarea>
-						</div>
+					<div class="form-group">
+						<label for="location" data-i18n="locationLabel"
+							>Де:</label
+						>
+						<input
+							type="text"
+							id="location"
+							name="location"
+							data-i18n="locationPlaceholder"
+							placeholder="Місце проведення" />
+					</div>
 
-						<button
-							type="submit"
-							class="btn btn-primary"
-							data-i18n="submitBtn">
-							Надіслати заявку
-						</button>
-					</form>
-				</div>
+					<div class="form-group">
+						<label for="expectations" data-i18n="expectationsLabel"
+							>Що очікуєте:</label
+						>
+						<textarea
+							id="expectations"
+							name="expectations"
+							rows="3"
+							data-i18n="expectationsPlaceholder"
+							placeholder="Опишіть ваші очікування"></textarea>
+					</div>
+
+					<button
+						type="submit"
+						class="btn btn-primary"
+						data-i18n="submitBtn">
+						Надіслати заявку
+					</button>
+				</form>
 			</div>
-
 		</div>
 
 		<!-- Portfolio Modal -->
 		<div class="modal" id="portfolioModal">
 			<div class="modal-content portfolio-content">
 				<span class="close" id="closePortfolioModal">&times;</span>
-				<h3 data-i18n="portfolioTitle">Портфоліо</h3>
+				<h3 data-i18n="portfolioTitle" hidden>Портфоліо</h3>
 				<div id="portfolio-slider" class="keen-slider">
 					<div class="keen-slider__slide loading-slide">
 						<div class="loader">Завантаження...</div>
 					</div>
 				</div>
 				<div class="slider-controls">
-					<button class="slider-btn prev-btn" id="portfolioPrev">‹</button>
+					<button class="slider-btn prev-btn" id="portfolioPrev">
+						‹
+					</button>
 					<div class="slide-counter">
-						<span id="currentSlide">1</span> / <span id="totalSlides">1</span>
+						<span id="currentSlide">1</span> /
+						<span id="totalSlides">1</span>
 					</div>
-					<button class="slider-btn next-btn" id="portfolioNext">›</button>
+					<button class="slider-btn next-btn" id="portfolioNext">
+						›
+					</button>
 				</div>
 			</div>
 		</div>
