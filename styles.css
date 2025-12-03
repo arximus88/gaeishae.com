@@ -107,6 +107,7 @@ body {
 	width: var(--card-width);
 	aspect-ratio: var(--card-aspect-ratio);
 	transform-style: preserve-3d;
+	-webkit-transform-style: preserve-3d; /* Safari fix */
 	transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 	cursor: pointer;
 	margin: 20px;
@@ -130,6 +131,7 @@ body {
 	width: 100%;
 	height: 100%;
 	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden; /* Safari fix */
 	border-radius: var(--radius);
 	display: flex;
 	align-items: center;
@@ -137,6 +139,7 @@ body {
 	padding: 16px;
 	outline: none;
 	-webkit-tap-highlight-color: transparent;
+	transform: translateZ(0); /* Force hardware acceleration */
 }
 
 .card-front {
@@ -188,9 +191,9 @@ body {
 	z-index: 10;
 	background: #000000;
 	border: var(--border-size) solid var(--glass-border);
-	backdrop-filter: blur(10px);
+	/* backdrop-filter: blur(10px); Removed to fix Safari flickering */
 	box-shadow: var(--glass-shadow);
-	transform: rotateY(180deg);
+	transform: rotateY(180deg) translateZ(1px); /* Added translateZ for Safari stability */
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
