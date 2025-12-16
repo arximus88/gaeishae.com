@@ -618,10 +618,10 @@ body {
 .modal-content {
 	background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
 	margin: 2.5vh auto;
-	padding: 4px;
+	padding: 16px;
 	position: relative;
 	box-sizing: border-box;
-	border-radius: 15px;
+	border-radius: 32px;
 	width: 90%;
 	max-width: 1024px;
 	max-height: fit-content;
@@ -656,8 +656,10 @@ body {
 }
 
 .modal-content h3 {
-	margin-bottom: 20px;
-	color: #00ff00;
+	font-size: 24px;
+	margin-top: 12px;
+	margin-bottom: 24px;
+	color: #ffdcbe;
 	text-align: center;
 }
 
