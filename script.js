@@ -114,7 +114,9 @@ class HolographicCard {
 
         // Button actions
         this.bookShowBtn.addEventListener('click', () => this.openBookingModal());
-        this.listenBtn.addEventListener('click', () => this.openMusicLink());
+        if (this.listenBtn) {
+            this.listenBtn.addEventListener('click', () => this.openMusicLink());
+        }
         this.portfolioBtn.addEventListener('click', () => this.openPortfolio());
 
         // Modal events

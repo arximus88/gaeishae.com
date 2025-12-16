@@ -36,10 +36,11 @@ This is a holographic business card website for artist GÆISHÆ. The site featur
 ├── neuro-noise-glsl-shader/  # GLSL shader effects (NeuroShader class)
 │   ├── src/script.js   # WebGL shader implementation
 │   └── src/style.css   # Shader-specific styles
-├── package.json       # Playwright testing dependency only
-├── task.md           # Ukrainian technical specification
-├── CLAUDE.md         # This documentation file
-└── worker.js         # Cloudflare Worker for Telegram integration (not in repo)
+├── package.json       # Dependencies: Playwright, dotenv, node-fetch
+├── worker.js          # Cloudflare Worker for Telegram integration
+├── wrangler.toml      # Cloudflare Worker configuration
+├── task.md            # Ukrainian technical specification
+└── CLAUDE.md          # This documentation file
 ```
 
 ## Key Technical Requirements
@@ -243,8 +244,12 @@ npx playwright test --headed
 # Deploy to Cloudflare Pages
 npx wrangler pages deploy
 
-# Deploy Worker
+# Deploy Worker (requires environment variables to be set first)
 npx wrangler deploy worker.js
+
+# Set production secrets for Worker (one-time setup)
+npx wrangler secret put TELEGRAM_BOT_TOKEN
+npx wrangler secret put TELEGRAM_CHAT_ID
 ```
 
 ## Important Notes
@@ -259,9 +264,20 @@ npx wrangler deploy worker.js
 
 ## Environment Variables
 
-**Required for Telegram integration:**
+**Required for Telegram integration (Cloudflare Worker):**
 - `TELEGRAM_BOT_TOKEN` - Bot token from @BotFather
 - `TELEGRAM_CHAT_ID` - Target chat for form submissions
+
+**Setting secrets for production:**
+```bash
+# Set each secret individually (will prompt for value)
+npx wrangler secret put TELEGRAM_BOT_TOKEN
+npx wrangler secret put TELEGRAM_CHAT_ID
+```
+
+**Local development:**
+- For local worker testing, create a `.env` file (not tracked in git)
+- Or use wrangler.toml `[env.dev.vars]` section (see wrangler.toml for template)
 
 ## Core Architecture Details
 

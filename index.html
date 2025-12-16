@@ -68,7 +68,7 @@
 								>
 							</button>
 
-							<button class="btn btn-secondary" id="listenBtn">
+							<!-- <button class="btn btn-secondary" id="listenBtn">
 								<img
 									src="images/icon_music.svg"
 									alt=""
@@ -76,7 +76,7 @@
 								<span data-i18n="listenSong"
 									>Прослухати пісню</span
 								>
-							</button>
+							</button> -->
 
 							<button class="btn btn-tertiary" id="portfolioBtn">
 								<img
@@ -120,14 +120,14 @@
 									src="images/social-threads.svg"
 									alt="Threads" />
 							</a>
-							<a
+							<!-- <a
 								href="https://x.com/gaeishae"
 								class="social-icon"
 								title="X (Twitter)"
 								target="_blank"
 								rel="noopener noreferrer">
 								<img src="images/social-x.svg" alt="X" />
-							</a>
+							</a> -->
 							<a
 								href="https://linktr.ee/melting_butter"
 								class="social-icon"
@@ -159,7 +159,13 @@
 						<label for="name" data-i18n="nameLabel"
 							>Ваше ім'я:</label
 						>
-						<input type="text" id="name" name="name" required />
+						<input
+							type="text"
+							id="name"
+							name="name"
+							placeholder="Як до вас звертатися?"
+							data-i18n="namePlaceholder"
+							required />
 					</div>
 
 					<div class="form-group">
@@ -170,6 +176,8 @@
 							type="text"
 							id="contact"
 							name="contact"
+							placeholder="Ваш номер телефону або email"
+							data-i18n="contactPlaceholder"
 							required />
 					</div>
 
