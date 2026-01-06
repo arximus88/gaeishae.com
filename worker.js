@@ -1,6 +1,10 @@
 /**
  * Cloudflare Worker for GÆISHÆ Telegram Bot Integration
- * Handles booking form submissions and forwards them to Telegram
+ * Handles booking form submissions, saves to D1 database, and forwards to Telegram
+ *
+ * Environment detection:
+ * - Set TEST_MODE=true in .dev.vars for local testing (uses test_bookings table)
+ * - Production uses prod_bookings table
  */
 
 export default {
@@ -42,13 +46,66 @@ async function handleBookingSubmission(request, env) {
       return createErrorResponse('Name and contact are required', 400)
     }
 
+    // Get request metadata
+    const ipAddress = request.headers.get('CF-Connecting-IP') || 'unknown'
+    const userAgent = request.headers.get('User-Agent') || 'unknown'
+
+    // Determine environment: check TEST_MODE env variable
+    const isTest = env.TEST_MODE === 'true'
+    const tableName = isTest ? 'test_bookings' : 'prod_bookings'
+
+    console.log(`Processing booking for ${isTest ? 'TEST' : 'PRODUCTION'} environment`)
+    console.log(`Chat ID: ${env.TELEGRAM_CHAT_ID}`)
+
+    // Save to D1 database first (so we don't lose data even if Telegram fails)
+    let dbSuccess = false
+
+    try {
+      await env.DB.prepare(`
+        INSERT INTO ${tableName} (name, contact, event, location, expectations, ip_address, user_agent)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `).bind(
+        name,
+        contact,
+        event || null,
+        location || null,
+        expectations || null,
+        ipAddress,
+        userAgent
+      ).run()
+
+      dbSuccess = true
+      console.log(`Booking saved to ${tableName} successfully`)
+    } catch (error) {
+      console.error('Failed to save to database:', error)
+      // Continue anyway to try sending to Telegram
+    }
+
     // Send to Telegram
     const telegramSuccess = await sendToTelegram(bookingData, env)
+    const telegramError = telegramSuccess ? null : 'Failed to send to Telegram'
 
-    if (telegramSuccess) {
+    // Update database with Telegram delivery status if DB save was successful
+    if (dbSuccess) {
+      try {
+        await env.DB.prepare(`
+          UPDATE ${tableName}
+          SET telegram_sent = ?, telegram_error = ?
+          WHERE id = (SELECT MAX(id) FROM ${tableName})
+        `).bind(
+          telegramSuccess ? 1 : 0,
+          telegramError
+        ).run()
+      } catch (error) {
+        console.error('Failed to update Telegram status:', error)
+      }
+    }
+
+    // Return success if either DB or Telegram worked
+    if (dbSuccess || telegramSuccess) {
       return createSuccessResponse('Booking request submitted successfully')
     } else {
-      return createErrorResponse('Failed to send booking request', 500)
+      return createErrorResponse('Failed to process booking request', 500)
     }
 
   } catch (error) {
@@ -63,6 +120,7 @@ async function sendToTelegram(bookingData, env) {
 
   console.log('Bot Token available:', !!botToken)
   console.log('Chat ID available:', !!chatId)
+  console.log('Target Chat ID:', chatId)
 
   if (!botToken || !chatId) {
     console.error('Missing Telegram configuration', {
@@ -72,8 +130,9 @@ async function sendToTelegram(bookingData, env) {
     return false
   }
 
-  // Format the message with booking details
-  const message = formatBookingMessage(bookingData)
+  // Determine environment for message formatting (check TEST_MODE env variable)
+  const isTest = env.TEST_MODE === 'true'
+  const message = formatBookingMessage(bookingData, isTest)
 
   const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`
 
@@ -106,7 +165,7 @@ async function sendToTelegram(bookingData, env) {
   }
 }
 
-function formatBookingMessage(data) {
+function formatBookingMessage(data, isTest = false) {
   const timestamp = new Date().toLocaleString('uk-UA', {
     timeZone: 'Europe/Kiev',
     year: 'numeric',
@@ -116,7 +175,9 @@ function formatBookingMessage(data) {
     minute: '2-digit'
   })
 
-  return `🎭 <b>НОВЕ БРОНЮВАННЯ ШОУУ</b>
+  const envBadge = isTest ? '🧪 <b>TEST ENVIRONMENT</b>\n\n' : ''
+
+  return `${envBadge}🎭 <b>НОВЕ БРОНЮВАННЯ ШОУ</b>
 
 👤 <b>Ім'я:</b> ${escapeHtml(data.name)}
 📞 <b>Контакт:</b> ${escapeHtml(data.contact)}

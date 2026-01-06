@@ -1,0 +1,13 @@
+# Local development environment variables
+# Copy this file to .dev.vars and fill in your values
+# .dev.vars is git-ignored and safe for local testing
+
+# Use the same bot token as production
+TELEGRAM_BOT_TOKEN=your_bot_token_from_botfather
+
+# Use YOUR chat ID for testing (not the client's)
+# Get your chat ID from @userinfobot on Telegram
+TELEGRAM_CHAT_ID=your_personal_chat_id
+
+# Enable test mode (saves to test_bookings table, adds 🧪 badge to messages)
+TEST_MODE=true

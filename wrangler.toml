@@ -2,6 +2,12 @@ name = "gaeishae-booking-bot"
 main = "worker.js"
 compatibility_date = "2024-09-16"
 
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "gaeishae-bookings"
+database_id = "d6ccdd98-aedc-4ace-a731-77db3af69aeb"
+
 # Development environment variables
 # For local development, copy these values to a .env file
 # [env.dev.vars]
