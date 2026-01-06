@@ -49,6 +49,10 @@ class HolographicCard {
         this.infoModal = document.getElementById('infoModal');
         this.closeInfoModal = document.getElementById('closeInfoModal');
         this.whoIsTitle = document.getElementById('whoIsTitle');
+        this.teaserBtn = document.getElementById('teaserBtn');
+        this.videoModal = document.getElementById('videoModal');
+        this.closeVideoModal = document.getElementById('closeVideoModal');
+        this.teaserVideoIframe = document.getElementById('teaserVideoIframe');
         this.soundToggle = document.getElementById('soundToggle');
         this.closeModal = document.getElementById('closeModal');
         this.neuroCanvas = document.getElementById('neuroCanvas');
@@ -159,6 +163,23 @@ class HolographicCard {
             });
         }
 
+        // Video modal events
+        if (this.teaserBtn) {
+            this.teaserBtn.addEventListener('click', () => this.openVideoModal());
+        }
+
+        if (this.closeVideoModal) {
+            this.closeVideoModal.addEventListener('click', () => this.closeVideoModalHandler());
+        }
+
+        if (this.videoModal) {
+            this.videoModal.addEventListener('click', (e) => {
+                if (e.target === this.videoModal) {
+                    this.closeVideoModalHandler();
+                }
+            });
+        }
+
         // Form submission
         this.bookingForm.addEventListener('submit', (e) => this.handleFormSubmission(e));
 
@@ -174,6 +195,8 @@ class HolographicCard {
                     this.closePortfolioModalHandler();
                 } else if (this.infoModal && this.infoModal.style.display === 'block') {
                     this.closeInfoModalHandler();
+                } else if (this.videoModal && this.videoModal.style.display === 'block') {
+                    this.closeVideoModalHandler();
                 }
             }
             if (e.key === ' ' || e.key === 'Enter') {
@@ -355,6 +378,26 @@ class HolographicCard {
         if (!this.infoModal) return;
         this.infoModal.style.display = 'none';
         this.playSound('close');
+    }
+
+    openVideoModal() {
+        if (!this.videoModal) return;
+        this.videoModal.style.display = 'block';
+        this.playSound('open');
+        
+        if (this.teaserVideoIframe) {
+            this.teaserVideoIframe.src = 'https://player.cloudinary.com/embed/?cloud_name=dnoji6mcx&public_id=C3102_u0kjrg&profile=cld-default&autoplay=true';
+        }
+    }
+
+    closeVideoModalHandler() {
+        if (!this.videoModal) return;
+        this.videoModal.style.display = 'none';
+        this.playSound('close');
+        
+        if (this.teaserVideoIframe) {
+            this.teaserVideoIframe.src = '';
+        }
     }
 
     async initializePortfolioSlider() {
