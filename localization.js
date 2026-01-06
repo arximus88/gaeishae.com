@@ -26,7 +26,8 @@ const translations = {
         infoTitle: "Хто така GÆISHÆ?",
         infoText1: "Gaeishae (formerly known as 芸者) — артистка, перформерка та storyteller. Child of art, вона увібрала філософію японської культури гейші й левітує на межі образів, сенсів та витонченості.",
         infoText2: "Її тілесний перформанс, у якому голос, рух і образ зливаються в єдину дію, пробуджує підсвідомі бажання та веде до катарсису — граючи.",
-        infoText3: "Gaeishae — це аура свободи, спокуси та присутності: досвід, який хочеться відчути знову і знову."
+        infoText3: "Gaeishae — це аура свободи, спокуси та присутності: досвід, який хочеться відчути знову і знову.",
+        metaDescription: "Gaeishae (ex. 芸者) — артистка, перформерка та storyteller. Відкрийте філософію японської гейші в сучасному перформансі."
     },
     en: {
         whoIs: "Who is GÆISHÆ?",
@@ -55,7 +56,8 @@ const translations = {
         infoTitle: "Who is GÆISHÆ?",
         infoText1: "Gaeishae (formerly known as 芸者) — a performance artist and storyteller. Child of art, she draws from the philosophy of the Japanese geisha and moves gracefully between images, feelings, and elegance.",
         infoText2: "Her performances, where voice, movement, and presence come together as one, awaken hidden desires and lead to catharsis — playfully.",
-        infoText3: "Gaeishae is an aura of freedom, seduction, and presence: an experience you want to feel again and again."
+        infoText3: "Gaeishae is an aura of freedom, seduction, and presence: an experience you want to feel again and again.",
+        metaDescription: "Gaeishae (formerly known as 芸者) — a performance artist and storyteller. Experience the art of Japanese geisha philosophy merged with modern performance."
     }
 };
 
@@ -200,6 +202,13 @@ class Localization {
 
         // Update HTML lang attribute
         document.documentElement.lang = this.currentLang;
+
+        // Update SEO Meta Tags
+        if (t.metaDescription) {
+            document.querySelector('meta[name="description"]').setAttribute('content', t.metaDescription);
+            document.querySelector('meta[property="og:description"]').setAttribute('content', t.metaDescription);
+            document.querySelector('meta[property="twitter:description"]').setAttribute('content', t.metaDescription);
+        }
     }
 
     t(key) {
