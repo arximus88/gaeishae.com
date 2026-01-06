@@ -46,6 +46,9 @@ class HolographicCard {
         this.bookingForm = document.getElementById('bookingForm');
         this.portfolioModal = document.getElementById('portfolioModal');
         this.closePortfolioModal = document.getElementById('closePortfolioModal');
+        this.infoModal = document.getElementById('infoModal');
+        this.closeInfoModal = document.getElementById('closeInfoModal');
+        this.whoIsTitle = document.getElementById('whoIsTitle');
         this.soundToggle = document.getElementById('soundToggle');
         this.closeModal = document.getElementById('closeModal');
         this.neuroCanvas = document.getElementById('neuroCanvas');
@@ -135,6 +138,27 @@ class HolographicCard {
             }
         });
 
+        // Info modal events
+        if (this.whoIsTitle) {
+            this.whoIsTitle.addEventListener('click', (e) => {
+                // Prevent card flip when clicking title
+                e.stopPropagation();
+                this.openInfoModal();
+            });
+        }
+        
+        if (this.closeInfoModal) {
+            this.closeInfoModal.addEventListener('click', () => this.closeInfoModalHandler());
+        }
+        
+        if (this.infoModal) {
+            this.infoModal.addEventListener('click', (e) => {
+                if (e.target === this.infoModal) {
+                    this.closeInfoModalHandler();
+                }
+            });
+        }
+
         // Form submission
         this.bookingForm.addEventListener('submit', (e) => this.handleFormSubmission(e));
 
@@ -148,6 +172,8 @@ class HolographicCard {
                     this.closeBookingModal();
                 } else if (this.portfolioModal.style.display === 'block') {
                     this.closePortfolioModalHandler();
+                } else if (this.infoModal && this.infoModal.style.display === 'block') {
+                    this.closeInfoModalHandler();
                 }
             }
             if (e.key === ' ' || e.key === 'Enter') {
@@ -316,6 +342,18 @@ class HolographicCard {
 
     closePortfolioModalHandler() {
         this.portfolioModal.style.display = 'none';
+        this.playSound('close');
+    }
+
+    openInfoModal() {
+        if (!this.infoModal) return;
+        this.infoModal.style.display = 'block';
+        this.playSound('open');
+    }
+
+    closeInfoModalHandler() {
+        if (!this.infoModal) return;
+        this.infoModal.style.display = 'none';
         this.playSound('close');
     }
 

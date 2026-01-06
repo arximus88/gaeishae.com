@@ -7,7 +7,7 @@ const translations = {
         viewPortfolio: "Переглянути портфоліо",
         bookingTitle: "Забронювати шоу",
         nameLabel: "Ваше ім'я:",
-        namePlaceholder: "Як до вас звертатися?",
+        namePlaceholder: "Введіть ваше ім'я",
         contactLabel: "Контакт (телефон/email):",
         contactPlaceholder: "Ваш номер телефону або email",
         eventLabel: "Для кого шоу:",
@@ -21,7 +21,12 @@ const translations = {
         errorMessage: "Помилка відправки. Спробуйте ще раз або зв'яжіться напряму.",
         soundToggleTitle: "Увімкнути/вимкнути звук",
         touchInstruction: "Доторкнись до картки",
-        portfolioTitle: "Портфоліо"
+        portfolioTitle: "Портфоліо",
+        bookingNotice: "Кожен перформанс адаптується до простору, аудиторії та задуму події — жодне шоу не повторюється.",
+        infoTitle: "Хто така GÆISHÆ?",
+        infoText1: "Gaeishae (formerly known as 芸者) — артистка, перформерка та storyteller. Child of art, вона увібрала філософію японської культури гейші й левітує на межі образів, сенсів та витонченості.",
+        infoText2: "Її тілесний перформанс, у якому голос, рух і образ зливаються в єдину дію, пробуджує підсвідомі бажання та веде до катарсису — граючи.",
+        infoText3: "Gaeishae — це аура свободи, спокуси та присутності: досвід, який хочеться відчути знову і знову."
     },
     en: {
         whoIs: "Who is GÆISHÆ?",
@@ -31,7 +36,7 @@ const translations = {
         viewPortfolio: "View Portfolio",
         bookingTitle: "Book a Show",
         nameLabel: "Your name:",
-        namePlaceholder: "How should we address you?",
+        namePlaceholder: "Insert your name",
         contactLabel: "Contact (phone/email):",
         contactPlaceholder: "Your phone number or email",
         eventLabel: "Event details:",
@@ -45,7 +50,12 @@ const translations = {
         errorMessage: "Sending error. Please try again or contact directly.",
         soundToggleTitle: "Toggle sound on/off",
         touchInstruction: "Touch the card",
-        portfolioTitle: "Portfolio"
+        portfolioTitle: "Portfolio",
+        bookingNotice: "Each performance adapts to the space, audience, and event concept — no two shows are alike.",
+        infoTitle: "Who is GÆISHÆ?",
+        infoText1: "Gaeishae (formerly known as 芸者) — a performance artist and storyteller. Child of art, she draws from the philosophy of the Japanese geisha and moves gracefully between images, feelings, and elegance.",
+        infoText2: "Her performances, where voice, movement, and presence come together as one, awaken hidden desires and lead to catharsis — playfully.",
+        infoText3: "Gaeishae is an aura of freedom, seduction, and presence: an experience you want to feel again and again."
     }
 };
 

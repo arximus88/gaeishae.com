@@ -623,7 +623,7 @@ body {
 	box-sizing: border-box;
 	border-radius: 32px;
 	width: 90%;
-	max-width: 1024px;
+	max-width: 720px;
 	max-height: fit-content;
 	border: 2px solid rgba(255, 255, 255, 0.1);
 	position: relative;
@@ -695,6 +695,16 @@ body {
 .form-group input::placeholder,
 .form-group textarea::placeholder {
 	color: #888;
+}
+
+.booking-notice {
+	font-family: "Philosopher", serif;
+	font-size: 16px;
+	font-style: italic;
+	color: rgba(255, 255, 255, 0.7);
+	text-align: center;
+	margin-bottom: 20px;
+	line-height: 1.4;
 }
 
 .sound-toggle {
@@ -800,6 +810,53 @@ body {
 	to {
 		opacity: 1;
 		transform: translateX(-50%) translateY(0);
+	}
+}
+
+/* Interactive Title */
+#whoIsTitle {
+	cursor: pointer;
+	position: relative;
+	display: inline-block;
+	transition: text-shadow 0.3s ease;
+	width: fit-content;
+}
+
+#whoIsTitle:hover {
+	text-decoration: underline;
+	text-decoration-color: rgba(255, 255, 255, 0.5);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 4px;
+	text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+/* Info Modal Text */
+.info-text-container {
+	padding: 10px 20px 30px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.info-text {
+	font-family: "Philosopher", serif;
+	font-size: 18px;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.9);
+	text-align: center;
+	margin: 0;
+}
+
+.info-text.highlight {
+	color: #ffdcbe;
+	text-shadow: 0 0 10px rgba(255, 122, 8, 0.3);
+	font-style: italic;
+	margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+	.info-text {
+		font-size: 16px;
 	}
 }
 
