@@ -333,7 +333,7 @@ class HolographicCard {
     }
 
     openBookingModal() {
-        this.bookingModal.style.display = 'block';
+        this.bookingModal.style.display = 'flex';
         this.playSound('open');
         // Focus first input
         setTimeout(() => {
@@ -354,7 +354,7 @@ class HolographicCard {
     }
 
     async openPortfolio() {
-        this.portfolioModal.style.display = 'block';
+        this.portfolioModal.style.display = 'flex';
         this.playSound('open');
 
         // Initialize slider if not already done
@@ -370,7 +370,7 @@ class HolographicCard {
 
     openInfoModal() {
         if (!this.infoModal) return;
-        this.infoModal.style.display = 'block';
+        this.infoModal.style.display = 'flex';
         this.playSound('open');
     }
 
@@ -382,7 +382,7 @@ class HolographicCard {
 
     openVideoModal() {
         if (!this.videoModal) return;
-        this.videoModal.style.display = 'block';
+        this.videoModal.style.display = 'flex';
         this.playSound('open');
         
         if (this.teaserVideoIframe) {
