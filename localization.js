@@ -27,7 +27,8 @@ const translations = {
         infoText1: "Gaeishae (formerly known as 芸者) — артистка, перформерка та storyteller. Child of art, вона увібрала філософію японської культури гейші й левітує на межі образів, сенсів та витонченості.",
         infoText2: "Її тілесний перформанс, у якому голос, рух і образ зливаються в єдину дію, пробуджує підсвідомі бажання та веде до катарсису — граючи.",
         infoText3: "Gaeishae — це аура свободи, спокуси та присутності: досвід, який хочеться відчути знову і знову.",
-        metaDescription: "Gaeishae (ex. 芸者) — артистка, перформерка та storyteller. Відкрийте філософію японської гейші в сучасному перформансі."
+        metaDescription: "Gaeishae (ex. 芸者) — артистка, перформерка та storyteller. Відкрийте філософію японської гейші в сучасному перформансі.",
+        watchTeaser: "Дивитися тізер"
     },
     en: {
         whoIs: "Who is GÆISHÆ?",
@@ -35,6 +36,7 @@ const translations = {
         bookShow: "Book a Show",
         listenSong: "Listen to Song",
         viewPortfolio: "View Portfolio",
+        watchTeaser: "Watch teaser",
         bookingTitle: "Book a Show",
         nameLabel: "Your name:",
         namePlaceholder: "Insert your name",

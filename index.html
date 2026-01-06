@@ -86,7 +86,15 @@
 									>Забронювати шоу</span
 								>
 							</button>
-
+							<button class="btn btn-secondary" id="teaserBtn">
+								<img
+									src="images/icon_tease.svg"
+									alt=""
+									class="icon" />
+								<span data-i18n="watchTeaser"
+									>Watch teaser</span
+								>
+							</button>
 							<!-- <button class="btn btn-secondary" id="listenBtn">
 								<img
 									src="images/icon_music.svg"
@@ -284,6 +292,21 @@
 					<p class="info-text" data-i18n="infoText1"></p>
 					<p class="info-text" data-i18n="infoText2"></p>
 					<p class="info-text highlight" data-i18n="infoText3"></p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Video Teaser Modal -->
+		<div class="modal" id="videoModal">
+			<div class="modal-content video-modal-content">
+				<span class="close" id="closeVideoModal">&times;</span>
+				<div class="video-container">
+					<iframe
+						id="teaserVideoIframe"
+						src=""
+						allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+						allowfullscreen
+						frameborder="0"></iframe>
 				</div>
 			</div>
 		</div>
