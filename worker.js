@@ -182,12 +182,20 @@ async function handleBookingSubmission(request, env) {
       return createErrorResponse('Name and contact are required', 400)
     }
 
-    // Determine environment: check TEST_MODE env variable
-    const isTest = env.TEST_MODE === 'true'
+    // Environment detection logic
+    const DEV_CHAT_ID = '276882687';
+    const CLIENT_CHAT_ID = '594236669';
+    const currentChatId = String(env.TELEGRAM_CHAT_ID);
+
+    // If it's explicitly set to developer ID, it's a test environment
+    // OR if TEST_MODE is explicitly true AND it's not the real client ID
+    const isTest = (currentChatId === DEV_CHAT_ID) || 
+                   (env.TEST_MODE === 'true' && currentChatId !== CLIENT_CHAT_ID);
+    
     const tableName = isTest ? 'test_bookings' : 'prod_bookings'
 
     console.log(`Processing booking for ${isTest ? 'TEST' : 'PRODUCTION'} environment`)
-    console.log(`Chat ID: ${env.TELEGRAM_CHAT_ID}`)
+    console.log(`Chat ID: ${currentChatId}`)
 
     // Save to D1 database first (so we don't lose data even if Telegram fails)
     let dbSuccess = false
@@ -214,7 +222,7 @@ async function handleBookingSubmission(request, env) {
     }
 
     // Send to Telegram
-    const telegramSuccess = await sendToTelegram(bookingData, env)
+    const telegramSuccess = await sendToTelegram(bookingData, env, isTest)
     const telegramError = telegramSuccess ? null : 'Failed to send to Telegram'
 
     // Update database with Telegram delivery status if DB save was successful
@@ -246,26 +254,16 @@ async function handleBookingSubmission(request, env) {
   }
 }
 
-async function sendToTelegram(bookingData, env) {
+async function sendToTelegram(bookingData, env, isTest) {
   const botToken = env.TELEGRAM_BOT_TOKEN
   const chatId = env.TELEGRAM_CHAT_ID
 
-  console.log('Bot Token available:', !!botToken)
-  console.log('Chat ID available:', !!chatId)
-  console.log('Target Chat ID:', chatId)
-
   if (!botToken || !chatId) {
-    console.error('Missing Telegram configuration', {
-      botToken: !!botToken,
-      chatId: !!chatId
-    })
+    console.error('Missing Telegram configuration')
     return false
   }
 
-  // Determine environment for message formatting (check TEST_MODE env variable)
-  const isTest = env.TEST_MODE === 'true'
   const message = formatBookingMessage(bookingData, isTest)
-
   const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`
 
   try {
@@ -282,17 +280,9 @@ async function sendToTelegram(bookingData, env) {
       })
     })
 
-    if (response.ok) {
-      console.log('Message sent to Telegram successfully')
-      return true
-    } else {
-      const errorData = await response.text()
-      console.error('Telegram API error:', errorData)
-      return false
-    }
-
+    return response.ok;
   } catch (error) {
-    console.error('Error sending to Telegram:', error.message, error.stack)
+    console.error('Error sending to Telegram:', error.message)
     return false
   }
 }
@@ -311,13 +301,13 @@ function formatBookingMessage(data, isTest = false) {
 
   return `${envBadge}🎭 <b>НОВЕ БРОНЮВАННЯ ШОУ</b>
 
-👤 <b>Ім'я:</b> ${escapeHtml(data.name)}
-📞 <b>Контакт:</b> ${escapeHtml(data.contact)}
-🎪 <b>Подія:</b> ${escapeHtml(data.event || 'Не вказано')}
-📍 <b>Місце:</b> ${escapeHtml(data.location || 'Не вказано')}
-💭 <b>Очікування:</b> ${escapeHtml(data.expectations || 'Не вказано')}
+<b>Ім'я:</b> ${escapeHtml(data.name)}
+<b>Контакт:</b> ${escapeHtml(data.contact)}
+<b>Подія:</b> ${escapeHtml(data.event || 'Не вказано')}
+<b>Місце:</b> ${escapeHtml(data.location || 'Не вказано')}
+<b>Очікування:</b> ${escapeHtml(data.expectations || 'Не вказано')}
 
-⏰ <b>Отримано:</b> ${timestamp}`
+<b>Отримано:</b> ${timestamp}`
 }
 
 function escapeHtml(text) {
