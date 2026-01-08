@@ -991,3 +991,38 @@ body {
 		transform: translate(2px, -2px);
 	}
 }
+
+/* Honeypot field - hidden from humans but visible to bots */
+.hp-field {
+	position: absolute;
+	left: -9999px;
+	opacity: 0;
+	height: 0;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+/* Form validation error styles */
+.form-group input.error,
+.form-group textarea.error {
+	border-color: #ff4444;
+	background: rgba(255, 68, 68, 0.1);
+}
+
+.form-group .error-message {
+	color: #ff6b6b;
+	font-size: 0.8rem;
+	margin-top: 5px;
+	display: none;
+}
+
+.form-group .error-message.visible {
+	display: block;
+}
+
+/* Cloudflare Turnstile widget */
+.cf-turnstile {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 15px;
+}

@@ -45,6 +45,8 @@
 		<link
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css" />
+		<!-- Cloudflare Turnstile -->
+		<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 	</head>
 	<body>
 		<h1 class="visually-hidden">GÆISHÆ - Artist & Performer</h1>
@@ -244,9 +246,19 @@
 							placeholder="Опишіть ваші очікування"></textarea>
 					</div>
 
+					<!-- Honeypot field - invisible to real users, bots will fill it -->
+					<div class="form-group hp-field" aria-hidden="true">
+						<label for="website_url">Website URL:</label>
+						<input type="text" id="website_url" name="website_url" 
+							   tabindex="-1" autocomplete="off" />
+					</div>
+
 					<p class="booking-notice" data-i18n="bookingNotice">
 						Кожен перформанс адаптується до простору, аудиторії та задуму події — жодне шоу не повторюється.
 					</p>
+
+					<!-- Cloudflare Turnstile widget -->
+					<div class="cf-turnstile" data-sitekey="0x4AAAAAACLPQOgLCz54WfQa" data-theme="dark"></div>
 
 					<button
 						type="submit"
