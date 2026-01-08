@@ -580,16 +580,43 @@ class HolographicCard {
         e.preventDefault();
         
         const formData = new FormData(this.bookingForm);
+        
+        // Check honeypot - bots fill hidden fields
+        const honeypot = formData.get('website_url');
+        if (honeypot) {
+            // Bot detected - silently "succeed" to fool them
+            this.showSuccess();
+            this.closeBookingModal();
+            return;
+        }
+        
+        // Get form values
+        const name = formData.get('name')?.trim() || '';
+        const contact = formData.get('contact')?.trim() || '';
+        const event = formData.get('event')?.trim() || '';
+        const location = formData.get('location')?.trim() || '';
+        const expectations = formData.get('expectations')?.trim() || '';
+        
+        // Field validation
+        const validationErrors = this.validateFormFields(name, contact, location);
+        if (validationErrors.length > 0) {
+            this.showValidationErrors(validationErrors);
+            return;
+        }
+        
+        // Get Turnstile token if available
+        const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+        
         const data = {
-            name: formData.get('name'),
-            contact: formData.get('contact'),
-            event: formData.get('event'),
-            location: formData.get('location'),
-            expectations: formData.get('expectations')
+            name,
+            contact,
+            event,
+            location,
+            expectations,
+            turnstileToken
         };
 
         try {
-            // This will be replaced with actual Cloudflare Worker endpoint
             const response = await fetch('https://gaeishae-booking-bot.arximus88.workers.dev/api/submit-booking', {
                 method: 'POST',
                 headers: {
@@ -601,12 +628,104 @@ class HolographicCard {
             if (response.ok) {
                 this.showSuccess();
                 this.closeBookingModal();
+                // Reset Turnstile for next submission
+                if (window.turnstile) {
+                    window.turnstile.reset();
+                }
+                // Reset content filter trips on success
+                localStorage.removeItem('gaeishae-filter-trips');
+            } else if (response.status === 429) {
+                // Rate limited
+                this.showRateLimitError();
             } else {
-                throw new Error('Submission failed');
+                const errorData = await response.json().catch(() => ({}));
+                if (errorData.error && errorData.error.includes('неприйнятний')) {
+                    this.showContentError();
+                } else if (errorData.error && errorData.error.includes('Верифікація')) {
+                    this.showTurnstileError();
+                } else {
+                    throw new Error(errorData.error || 'Submission failed');
+                }
             }
         } catch (error) {
             console.error('Error submitting form:', error);
             this.showError();
+        }
+    }
+
+    validateFormFields(name, contact, location) {
+        const errors = [];
+        const currentLang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'uk';
+        
+        // Name validation: no numbers or special characters (allow letters, spaces, apostrophes, hyphens)
+        const namePattern = /^[a-zA-Zа-яА-ЯіІїЇєЄґҐ\s'\-]+$/;
+        if (!namePattern.test(name)) {
+            errors.push({
+                field: 'name',
+                message: currentLang === 'uk' 
+                    ? 'Ім\'я не може містити цифри або спецсимволи'
+                    : 'Name cannot contain numbers or special characters'
+            });
+        }
+        
+        // Contact validation: valid phone number or email
+        const phonePattern = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!phonePattern.test(contact.replace(/\s/g, '')) && !emailPattern.test(contact)) {
+            errors.push({
+                field: 'contact',
+                message: currentLang === 'uk' 
+                    ? 'Введіть коректний номер телефону або email'
+                    : 'Please enter a valid phone number or email'
+            });
+        }
+        
+        // Location validation: minimum 3 characters, can't be only numbers
+        if (location && location.length > 0) {
+            if (location.length < 3) {
+                errors.push({
+                    field: 'location',
+                    message: currentLang === 'uk' 
+                        ? 'Місце повинно містити мінімум 3 символи'
+                        : 'Location must be at least 3 characters'
+                });
+            } else if (/^\d+$/.test(location)) {
+                errors.push({
+                    field: 'location',
+                    message: currentLang === 'uk' 
+                        ? 'Місце не може складатися лише з цифр'
+                        : 'Location cannot be only numbers'
+                });
+            }
+        }
+        
+        return errors;
+    }
+
+    showValidationErrors(errors) {
+        // Clear previous errors
+        this.bookingForm.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+        this.bookingForm.querySelectorAll('.error-message').forEach(el => el.remove());
+        
+        errors.forEach(error => {
+            const field = this.bookingForm.querySelector(`#${error.field}`);
+            if (field) {
+                field.classList.add('error');
+                
+                // Add error message below field
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message visible';
+                errorDiv.textContent = error.message;
+                field.parentNode.appendChild(errorDiv);
+            }
+        });
+        
+        this.playSound('error');
+        
+        // Focus first error field
+        const firstErrorField = this.bookingForm.querySelector('.error');
+        if (firstErrorField) {
+            firstErrorField.focus();
         }
     }
 
@@ -635,6 +754,69 @@ class HolographicCard {
         }, 5000);
         
         this.playSound('error');
+    }
+
+    showContentError() {
+        // Track how many times filter was tripped using localStorage
+        let trips = parseInt(localStorage.getItem('gaeishae-filter-trips') || '0');
+        trips++;
+        localStorage.setItem('gaeishae-filter-trips', trips.toString());
+
+        // Use different message for 2nd time onwards
+        const messageKey = trips === 1 ? 'contentError1' : 'contentError2';
+        const message = this.localization.t(messageKey);
+        
+        const notification = document.createElement('div');
+        notification.className = 'notification error';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+        
+        this.playSound('error');
+    }
+
+    showRateLimitError() {
+        const currentLang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'uk';
+        const message = currentLang === 'uk' 
+            ? 'Забагато запитів. Спробуйте пізніше.'
+            : 'Too many requests. Please try again later.';
+        
+        const notification = document.createElement('div');
+        notification.className = 'notification error';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+        
+        this.playSound('error');
+    }
+
+    showTurnstileError() {
+        const currentLang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'uk';
+        const message = currentLang === 'uk' 
+            ? 'Верифікація не пройдена. Спробуйте ще раз.'
+            : 'Verification failed. Please try again.';
+        
+        const notification = document.createElement('div');
+        notification.className = 'notification error';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+        
+        this.playSound('error');
+        
+        // Reset Turnstile
+        if (window.turnstile) {
+            window.turnstile.reset();
+        }
     }
 
     toggleSound() {
@@ -703,7 +885,7 @@ const notificationStyles = `
     padding: 15px 25px;
     border-radius: 8px;
     font-weight: bold;
-    z-index: 2000;
+    z-index: 20000;
     animation: slideDown 0.3s ease-out;
 }
 
